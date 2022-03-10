@@ -10,8 +10,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 class MyTest {
 
 	@Test
-	void test() {
-		fail("Not yet implemented");
+	void Gameplay_Cash_Passed_Correctly() {
+		Integer cash = 100;
+		GameplayDriver G = new GameplayDriver(cash);
+		cash = GameplayDriver.setCash(50);
+		assertEquals(50, GameplayDriver.getCash());
+		assertEquals(50, cash);
+		
 	}
 
 }
