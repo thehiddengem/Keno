@@ -47,6 +47,8 @@ public class GameplayDriver {
 	}
 	
 	
+	
+	// Setters and getters ------------------------------------->
 	public static void setCash(Integer cash) {
 		pCash = cash;
 	}
@@ -55,11 +57,40 @@ public class GameplayDriver {
 		return pCash;
 	}
 	
+	public static void setnumSpotsSelected(Integer spots) {
+		numSpotsSelected =spots;
+	}
+	
+	public static Integer getnumSpotsSelected() {
+		return numSpotsSelected;
+	}
+	
+	// Made for Hanna
+	// If player hits button and is able to select more spots return true
+	// increment numSpotsSelected by 1.
+	// else return false
+	public static Boolean incSelected() {
+		
+		 if (numSpotsTotal > numSpotsSelected) {
+			numSpotsSelected++;
+			return true;
+		}
+		return false;
+	}
+	public static Boolean decSelected() {
+		if (numSpotsSelected > 0) {
+			numSpotsSelected--;
+			return true;
+		}
+		// Should never return false. This means the user is attempting to unselect a button when all buttons are unselected...
+		return false;
+	}
+	
 	public static void setnumSpotsTotal(Integer spots) {
 		numSpotsTotal =spots;
 	}
 	
-	public static Integer getSpots() {
+	public static Integer getnumSpotsTotal() {
 		return numSpotsTotal;
 	}
 	
