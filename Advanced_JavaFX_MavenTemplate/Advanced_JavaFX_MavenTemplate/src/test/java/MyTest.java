@@ -13,7 +13,7 @@ class MyTest {
 
 	@BeforeEach
 	 void init() {
-		GameplayDriver.setCash(100);
+		GameplayDriver.init_GameplayDriver(100);
 		
 		//Players hits confirm button with input 4
 		GameplayDriver.validNumSpots(4);        // Must be set to 1,4,8,10 or it will fail. 
@@ -29,34 +29,58 @@ class MyTest {
 		assertEquals(true,GameplayDriver.validNumSpots(10));    // Player has input that he wants to play with 10 spots in the text field. This is a valid input so pass
 		
 		assertEquals(false, GameplayDriver.readyToPlay());      // 0 / 10 spots selected, thus fail
-		assertEquals(0, GameplayDriver.getnumSpotsSelected());    
+		assertEquals(0, GameplayDriver.getnumSpotsSelected());
+		assertEquals("You still have 10 spots remaining!",      
+				      GameplayDriver.remainingPicks());        //  remainingPicks()Function creates error message you could use
 		
-		GameplayDriver.incSelected();                          //  Player selects 1 spot out of 10
+		
+		assertEquals(true,GameplayDriver.incSelected());        //  Player selects 1 spot out of 10
 		assertEquals(false, GameplayDriver.readyToPlay());
 		assertEquals(1, GameplayDriver.getnumSpotsSelected());
+		assertEquals("You still have 9 spots remaining!",      
+			      GameplayDriver.remainingPicks());
+		
 		
 		GameplayDriver.setnumSpotsSelected(10);                //  Player Selects 10 out of 10 spots
 		assertEquals(true, GameplayDriver.readyToPlay());      //  All spots filled, game is ready to progress
 		assertEquals(10, GameplayDriver.getnumSpotsSelected());
 		
-		assertEquals(false,GameplayDriver.incSelected());      //  Player attempts to select 11 out of his 10 available spots. incSelected fails and does not increment
+		
+		assertEquals(false,GameplayDriver.incSelected());      //  Player attempts to select 11 out of his 10 available spots. 
+															   //  incSelected fails and does not increment
+		
+		
 		assertEquals(true, GameplayDriver.readyToPlay());      //  Player still has 10 / 10 spots thus pass
 		assertEquals(10, GameplayDriver.getnumSpotsSelected());
 		
+		
 		assertEquals(true,GameplayDriver.decSelected());       //  Player De-Selects 2 Spots
 		assertEquals(true,GameplayDriver.decSelected());
+		
+		
 
 		
 		assertEquals(false, GameplayDriver.readyToPlay());     //  8/10 spots selected, will fail
 		assertEquals(8, GameplayDriver.getnumSpotsSelected());
+		assertEquals("You still have 2 spots remaining!",      
+			      GameplayDriver.remainingPicks());
 		
-		GameplayDriver.setnumSpotsSelected(0);                //   Player has de-selected every spot
-		assertEquals(false, GameplayDriver.decSelected());    //   This shouldn't be possible, but if a player did somehow manage to un-select more buttons than he selected, it will return false and do nothing
+		
+		GameplayDriver.setnumSpotsSelected(0);                 //  Player has de-selected every spot
+		assertEquals(false, GameplayDriver.decSelected());     //  This shouldn't be possible, but 
+		 													   //  if a player did somehow manage to un-select more buttons than he selected, 
+															   //  it will return false and do nothing
 		
 		
 		
 	}
 	
+	@Test
+	void drawingsInitdTest() {
+		assertEquals(1, GameplayDriver.drawings[0]);
+		assertEquals(2, GameplayDriver.drawings[1]);
+		assertEquals(80, GameplayDriver.drawings[79]);
+	}
 	
 	@ParameterizedTest
 	@ValueSource(ints = {1,4,8,10})
