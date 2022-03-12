@@ -1,18 +1,27 @@
+import java.util.ArrayList;
 
 public class GameplayDriver {
-	static Integer pCash;
-	static Integer numSpotsSelected; // how many buttons player has chosen currently as winners
-	static Integer numSpotsTotal;    // how many total buttons a player may choose.
-	static Integer repeatCards;      // how many times the same card has been used. Max of 4 times usable
 	
-	//
-	//  Default Constructor
-	//  Takes param int to update cash. Sets repeat to 0
-	//	Might not be needed, but here until we decide we for sure don't need
-	//
-	GameplayDriver(Integer cash){
-		setCash(cash);
+	public static ArrayList<Integer> playerSelections = new ArrayList<Integer>();  
+    public static ArrayList<Integer> matches = new ArrayList<Integer>();           
+    public static Integer[] drawings = new Integer[80];                            //Size wont change, only order will change
+    
+
+    
+    
+	public static Integer totalWinnings;    // set by default constructor or setWinnings()
+	public static Integer numSpotsSelected; // how many buttons player has chosen currently as winners
+	public static Integer numSpotsTotal;    // how many total buttons a player may choose.
+	public static Integer repeatCards;      // how many times the same card has been used. Max of 4 times usable
+	
+
+	static void init_GameplayDriver(Integer cash){
+		setWinnings(cash);
 		setRepeat(0);
+		
+	    for (int i = 0; i < 80; i++) {
+	    	drawings[i] = i+1;
+	    }
 	}
 	
 	//
@@ -48,13 +57,14 @@ public class GameplayDriver {
 	
 	
 	
+	
 	// Setters and getters ------------------------------------->
-	public static void setCash(Integer cash) {
-		pCash = cash;
+	public static void setWinnings(Integer cash) {
+		totalWinnings = cash;
 	}
 	
-	public static Integer getCash() {
-		return pCash;
+	public static Integer getWinnings() {
+		return totalWinnings;
 	}
 	
 	public static void setnumSpotsSelected(Integer spots) {
@@ -87,13 +97,21 @@ public class GameplayDriver {
 	}
 	
 	public static void setnumSpotsTotal(Integer spots) {
-		numSpotsTotal =spots;
+		numSpotsTotal = spots;
 	}
 	
 	public static Integer getnumSpotsTotal() {
 		return numSpotsTotal;
 	}
 	
+	// Made for Hanna
+		// If player "plays again"
+		// increment repeatCards by 1.
+		// else return repeatCards
+	public static Integer incRepeat() {
+		repeatCards++;
+		return repeatCards;
+	}
 	public static void setRepeat(Integer repeat) {
 		repeatCards = repeat;
 	}
