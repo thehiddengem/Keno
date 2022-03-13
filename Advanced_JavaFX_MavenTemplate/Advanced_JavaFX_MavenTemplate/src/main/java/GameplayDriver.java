@@ -1,10 +1,14 @@
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Random;
+import java.util.Set;
 
 public class GameplayDriver {
 	
 	public static ArrayList<Integer> playerSelections = new ArrayList<Integer>();  
     public static ArrayList<Integer> matches = new ArrayList<Integer>();           
-    public static Integer[] drawings = new Integer[80];                            //Size wont change, only order will change
+    public static Integer[] drawings = new Integer[80];                         //Size wont change, only order will change
     
 
     
@@ -15,12 +19,12 @@ public class GameplayDriver {
 	public static Integer repeatCards;      // how many times the same card has been used. Max of 4 times usable
 	
 
-	static void init_GameplayDriver(Integer cash){
+	public static void init_GameplayDriver(Integer cash){
 		setWinnings(cash);
 		setRepeat(0);
 		
 	    for (int i = 0; i < 80; i++) {
-	    	drawings[i] = i+1;
+	    	drawings[i] = i;
 	    }
 	}
 	
@@ -41,6 +45,7 @@ public class GameplayDriver {
 		return false;
 	}
 	
+	
 	//  public static String remainingPicks():
 	//  
 	//  Returns a string stating how many picks must be made before the player can continue to next scene
@@ -55,10 +60,51 @@ public class GameplayDriver {
 		return numSpotsTotal == numSpotsSelected;
 	}
 	
+	//  This shuffles index's 0 to 80, "randomizing" the contents
+	//  The first 20 index's will be used as winners ( 0- 19 )
+	static void shuffleDrawings() {
+
+		Random shuffleDraw = new Random();
+		 Set<Integer> set = new LinkedHashSet<Integer>();
+		 while(set.size() < 80) {
+			 set.add(shuffleDraw.nextInt(80) + 1);
+		 }
+		 int counter = 0;
+		 
+		 for(Integer entry : set) {
+			drawings[counter] = entry;
+			counter++;
+		 }
+		
+		}
+	
+	// This function finds all of the matches by comparing matches arraylist to 1-19 of drawings
+	// You can access matches by using the string, or just iterate through the matches ArrayList
+	public static String findWinners() {
+		String result = "";
+		matches.clear();
+		shuffleDrawings();
+		for (int i = 0; i < 20; i++) {
+			if (playerSelections.contains(drawings[i])) {
+				matches.add(drawings[i]);
+				result += drawings[i] + " "; // can we pass an Int to string like this?
+			}
+		}
+		return result;
+    // clear matches
+	// grab first value from playerSelections
+    // check if this value = 1- 19
+    // if match, add to matches, add to string winning matches
+	}
 	
 	
 	
 	// Setters and getters ------------------------------------->
+	
+	public static void addNumberToPlayerSelections(Integer i) {
+		playerSelections.add(i);
+		numSpotsSelected++;
+	}
 	public static void setWinnings(Integer cash) {
 		totalWinnings = cash;
 	}
