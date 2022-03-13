@@ -105,7 +105,7 @@ class MyTest {
 
 	}
 	@Test
-	void matchingTest() {
+	void matchingTestSimple() {
 		GameplayDriver.setnumSpotsTotal(5);
 		GameplayDriver.setnumSpotsSelected(0);
 		GameplayDriver.addNumberToPlayerSelections(5);
@@ -113,10 +113,158 @@ class MyTest {
 		GameplayDriver.addNumberToPlayerSelections(9);
 		GameplayDriver.addNumberToPlayerSelections(11);
 		GameplayDriver.addNumberToPlayerSelections(13);
-		String s = GameplayDriver.findWinners();
-		System.out.println("Winners" + s);
+		GameplayDriver.drawings[0] = 1;
+		
+		GameplayDriver.drawings[1] = 10;
+		
+		GameplayDriver.drawings[2] = 2;
+		GameplayDriver.drawings[3] = 3;
+		GameplayDriver.drawings[4] = 4;
+		GameplayDriver.drawings[5] = 5;
+		GameplayDriver.drawings[6] = 6;
+		GameplayDriver.drawings[7] = 7;
+		GameplayDriver.drawings[8] = 8;
+		GameplayDriver.drawings[9] = 9;
+		GameplayDriver.drawings[10] = 11;
+		GameplayDriver.drawings[11] = 12;
+		GameplayDriver.drawings[12] = 13;
+		GameplayDriver.drawings[13] = 14;
+		GameplayDriver.drawings[14] = 15;
+		GameplayDriver.drawings[15] = 16;
+		GameplayDriver.drawings[16] = 17;
+		GameplayDriver.drawings[17] = 18;
+		GameplayDriver.drawings[18] = 19;
+		GameplayDriver.drawings[19] = 20;
+		String s = GameplayDriver.findWinnersTESTER();
+		
+		assertEquals(GameplayDriver.matches.size(), 5);
+		assertEquals(s, "5 7 9 11 13 ");
 		
 	}
+	
+	void matchingTestDuplicates() {
+		GameplayDriver.setnumSpotsTotal(5);
+		GameplayDriver.setnumSpotsSelected(0);
+		GameplayDriver.addNumberToPlayerSelections(5);
+		GameplayDriver.addNumberToPlayerSelections(7);
+		GameplayDriver.addNumberToPlayerSelections(9);
+		GameplayDriver.addNumberToPlayerSelections(11);
+		GameplayDriver.addNumberToPlayerSelections(13);
+		GameplayDriver.drawings[0] = 1;
+		
+		GameplayDriver.drawings[1] = 1;
+		
+		GameplayDriver.drawings[2] = 1;
+		GameplayDriver.drawings[3] = 1;
+		GameplayDriver.drawings[4] = 1;
+		GameplayDriver.drawings[5] = 2;
+		GameplayDriver.drawings[6] = 2;
+		GameplayDriver.drawings[7] = 2;
+		GameplayDriver.drawings[8] = 5;
+		GameplayDriver.drawings[9] = 5;
+		GameplayDriver.drawings[10] = 5;
+		GameplayDriver.drawings[11] = 5;
+		GameplayDriver.drawings[12] = 5;
+		GameplayDriver.drawings[13] = 5;
+		GameplayDriver.drawings[14] = 7;
+		GameplayDriver.drawings[15] = 7;
+		GameplayDriver.drawings[16] = 7;
+		GameplayDriver.drawings[17] = 7;
+		GameplayDriver.drawings[18] = 7;
+		GameplayDriver.drawings[19] = 7;
+		String s = GameplayDriver.findWinnersTESTER();
+		
+		assertEquals(GameplayDriver.matches.size(), 5);
+		assertEquals(s, "5 7 ");
+		
+	}
+	
+	void SelectionProofOfConceptTest() {
+		Integer inputi = 2;  // player has selected 2 as their input
+		assertEquals(false, GameplayDriver.validNumSpots(inputi));
+		
+		inputi = 4;         // player changes to 4 as 2 is rejected
+		assertEquals(true, GameplayDriver.validNumSpots(inputi));
+		
+		assertEquals(4, GameplayDriver.getnumSpotsTotal());
+		
+		assertEquals(true, GameplayDriver.incSelected());  //player attempts to click on a button. Returns true
+		GameplayDriver.addNumberToPlayerSelections(5);     //because it returned true, the event handler adds the number to the player picks
+		assertEquals(1, GameplayDriver.getnumSpotsSelected());
+		
+		assertEquals(true, GameplayDriver.incSelected());  //the same follows...
+		GameplayDriver.addNumberToPlayerSelections(7);
+		assertEquals(2, GameplayDriver.getnumSpotsSelected());
+		
+		assertEquals(true, GameplayDriver.incSelected()); 
+		GameplayDriver.addNumberToPlayerSelections(9);
+		assertEquals(3, GameplayDriver.getnumSpotsSelected());
+		
+		assertEquals(true, GameplayDriver.incSelected()); 
+		GameplayDriver.addNumberToPlayerSelections(11);
+		assertEquals(4, GameplayDriver.getnumSpotsSelected());
+		
+		assertEquals(false, GameplayDriver.incSelected()); // Player attempts to click on a button. Returns false because he hit max picks.
+		//GameplayDriver.addNumberToPlayerSelections(13);  // Therefore do not run this code, because event handler sees that they cannot add more picks
+		assertEquals(4, GameplayDriver.getnumSpotsSelected());
+		
+		assertEquals(true, GameplayDriver.decSelected()); // Player deselects a button because he wants to change 7 to 13
+		GameplayDriver.removeNumberToPlayerSelections(7);
+		assertEquals(3, GameplayDriver.getnumSpotsSelected());
+		
+		assertEquals(true, GameplayDriver.incSelected());      // Player wants to select button 13
+		GameplayDriver.addNumberToPlayerSelections(13);        //  incSelected returns true, therefore run it
+		assertEquals(4, GameplayDriver.getnumSpotsSelected());
+		
+		//Player picks are 5 9 11 13
+		
+		GameplayDriver.drawings[0] = 5;
+		
+		GameplayDriver.drawings[1] = 9;
+		
+		GameplayDriver.drawings[2] = 11;
+		GameplayDriver.drawings[3] = 13;
+		
+		GameplayDriver.drawings[4] = 87;
+		GameplayDriver.drawings[5] = 83;
+		GameplayDriver.drawings[6] = 79;
+		GameplayDriver.drawings[7] = 72;
+		GameplayDriver.drawings[8] = 61;
+		GameplayDriver.drawings[9] = 40;
+		GameplayDriver.drawings[10] = 12;
+		GameplayDriver.drawings[11] = 41;
+		GameplayDriver.drawings[12] = 42;
+		GameplayDriver.drawings[13] = 55;
+		GameplayDriver.drawings[14] = 61;
+		GameplayDriver.drawings[15] = 67;
+		GameplayDriver.drawings[16] = 70;
+		GameplayDriver.drawings[17] = 82;
+		GameplayDriver.drawings[18] = 66;
+		GameplayDriver.drawings[19] = 1;
+		String s = GameplayDriver.findWinnersTESTER();
+		
+		assertEquals(GameplayDriver.matches.size(), 4);
+		assertEquals(s, "5 9, 11, 13 ");
+		
+	}
+	
+	@Test
+	void autoPicksTest() {
+		GameplayDriver.reset();
+		//Player is lazy, wants computer to generate picks for him
+		GameplayDriver.autoPicks(2);
+		assertEquals(0, GameplayDriver.getnumSpotsSelected());
+		assertEquals(0, GameplayDriver.getnumSpotsTotal());
+		assertEquals(0, GameplayDriver.playerSelections.size());
+		
+		GameplayDriver.autoPicks(4);
+		assertEquals(4, GameplayDriver.getnumSpotsSelected());
+		assertEquals(4, GameplayDriver.getnumSpotsTotal());
+		assertEquals(4, GameplayDriver.playerSelections.size());
+		System.out.println(GameplayDriver.extractSelectionsString());
+	}
+	
+	
 	
 	
 	@ParameterizedTest
