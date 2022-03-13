@@ -22,10 +22,7 @@ public class GameplayDriver {
 	public static void init_GameplayDriver(Integer cash){
 		setWinnings(cash);
 		setRepeat(0);
-		
-	    for (int i = 0; i < 80; i++) {
-	    	drawings[i] = i;
-	    }
+		init_Drawings(); // sets drawings[0] to 1 .... drawings[79] to 80;
 	}
 	
 	//
@@ -41,6 +38,15 @@ public class GameplayDriver {
 			repeatCards = 0;      // if the player is validating number of spots, he is using a new card. Thus 0
 			
 			return true;
+		}
+		// same as above but returns false so 0 cannot accidentally be used in actual gameplay. Can be used to "reset" the game state. 
+		else if (n == 0) {
+			numSpotsSelected = 0; // init for next Scene where player picks his numbers
+			numSpotsTotal = n;    
+			repeatCards = 0;      // if the player is validating number of spots, he is using a new card. Thus 0
+			
+			return false;
+			
 		}
 		return false;
 	}
@@ -78,6 +84,29 @@ public class GameplayDriver {
 		
 		}
 	
+	//  This creates a random generated selection for the player to use
+	//  Will check that the number provided is a valid playable spot number
+	static void autoPicks(int autoPicks) {
+		
+		if (!validNumSpots(autoPicks)) {
+			return;
+		}
+
+		Random shuffleDraw = new Random();
+		 Set<Integer> set = new LinkedHashSet<Integer>();
+		 playerSelections.clear();
+		 while(set.size() < autoPicks) {
+			 set.add(shuffleDraw.nextInt(80) + 1);
+		 }
+ 
+		 for(Integer entry : set) {
+			incSelected();
+			addNumberToPlayerSelections(entry);
+
+		 }
+		
+		}
+	
 	// This function finds all of the matches by comparing matches arraylist to 1-19 of drawings
 	// You can access matches by using the string, or just iterate through the matches ArrayList
 	public static String findWinners() {
@@ -91,20 +120,56 @@ public class GameplayDriver {
 			}
 		}
 		return result;
-    // clear matches
-	// grab first value from playerSelections
-    // check if this value = 1- 19
-    // if match, add to matches, add to string winning matches
+		
+	
+	}
+	
+	// Extracts drawings[0] - drawings[19] and returns it as a string. Can be used for testing, but leaving it up here in case you decide to use it
+	public static String extractDrawingsString() {
+		String result = "";
+		for (int i = 0; i < 20; i++) {
+			result += drawings[i] + " ";
+		}
+		return result;
+	}
+	//  // Extracts playerSelections and returns it as a string. Can be used for testing, but leaving it up here in case you decide to use it
+	public static String extractSelectionsString() {
+		String result = "";
+		for (int i = 0; i < playerSelections.size(); i++) {
+			result += playerSelections.get(i) + " ";
+		}
+		return result;
+	}
+	
+	//  clears matches and playerSelections array lists
+	//  numSpotsSelected = 0;
+	//  numSpotsTotal = 0;    
+	//  repeatCards = 0;
+	public static void reset() {
+		playerSelections.clear();
+		if (matches.size() > 0) {
+			matches.clear();
+		}
+		validNumSpots(0);
+		
 	}
 	
 	
 	
 	// Setters and getters ------------------------------------->
 	
+	// Add a number to player selected array. Should be used with with Boolean incSelected() to avoid adding too many numbers
 	public static void addNumberToPlayerSelections(Integer i) {
 		playerSelections.add(i);
-		numSpotsSelected++;
 	}
+	
+	
+	// remove a number to player selected array. Should be used with with Boolean decSelected() to avoid adding too many numbers
+	public static void removeNumberToPlayerSelections(Integer i) {
+		playerSelections.remove(i);
+	}
+
+	
 	public static void setWinnings(Integer cash) {
 		totalWinnings = cash;
 	}
@@ -133,6 +198,7 @@ public class GameplayDriver {
 		}
 		return false;
 	}
+	
 	public static Boolean decSelected() {
 		if (numSpotsSelected > 0) {
 			numSpotsSelected--;
@@ -166,5 +232,34 @@ public class GameplayDriver {
 		return repeatCards;
 	}
 	
+	// Testing Functions: These are for me. Use them if you need to, but be careful--------------------------------------------------------------
+	
+	//  used to initialize drawings[]
+	//  Also if for some reason drawings does not contain the original numbers 1-80, can be used as a reset
+	//  will be used for testing pre-determined drawings
+	public static void init_Drawings() {
+		 for (int i = 0; i < 80; i++) {
+		    	drawings[i] = i;
+		    }
+	}
+	
+	public static void setdrawingsIndex(int i, Integer value) {
+		drawings[i] = value;
+	}
+	
+	//  This is exactly the same as findWinners, but it removes the code that shuffles drawings.
+	//  This allows testing of the finding winners while allowing the tester to manually enter drawings array
+	public static String findWinnersTESTER() {
+		String result = "";
+		matches.clear();
+		for (int i = 0; i < 20; i++) {
+			if (playerSelections.contains(drawings[i])) {
+				matches.add(drawings[i]);
+				result += drawings[i] + " "; // can we pass an Int to string like this?
+			}
+		}
+		return result;
+
+	}
 	
 }
