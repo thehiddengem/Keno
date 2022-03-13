@@ -74,13 +74,50 @@ class MyTest {
 		
 		
 	}
-	
+	/*
 	@Test
 	void drawingsInitdTest() {
-		assertEquals(1, GameplayDriver.drawings[0]);
-		assertEquals(2, GameplayDriver.drawings[1]);
-		assertEquals(80, GameplayDriver.drawings[79]);
+		assertEquals(1, GameplayDriver.drawings.get(0));
+		assertEquals(2, GameplayDriver.drawings.get(1));
+		assertEquals(80, GameplayDriver.drawings.get(79));
+	}*/
+	
+	// This test verifies that every possible winning number 1-80, is actually still in the reshuffled list.
+	@Test
+	void shuffleDrawingsTest() {
+		GameplayDriver.shuffleDrawings();
+		for (int i = 1; i < 81; i++) {
+			System.out.print(" " + GameplayDriver.drawings[i-1]);     //  Prints every value from 1 - 80 in index 0 to 79 in randomized order
+		}
+		System.out.println();
+		
+		GameplayDriver.shuffleDrawings();
+		for (int i = 1; i < 81; i++) {
+			System.out.print(" " + GameplayDriver.drawings[i-1]);     //  Prints every value from 1 - 80 in index 0 to 79 in randomized order
+		}
+		System.out.println();
+		
+		GameplayDriver.shuffleDrawings();
+		for (int i = 1; i < 81; i++) {
+			System.out.print(" " + GameplayDriver.drawings[i-1]);     //  Prints every value from 1 - 80 in index 0 to 79 in randomized order
+		}
+		System.out.println();
+
 	}
+	@Test
+	void matchingTest() {
+		GameplayDriver.setnumSpotsTotal(5);
+		GameplayDriver.setnumSpotsSelected(0);
+		GameplayDriver.addNumberToPlayerSelections(5);
+		GameplayDriver.addNumberToPlayerSelections(7);
+		GameplayDriver.addNumberToPlayerSelections(9);
+		GameplayDriver.addNumberToPlayerSelections(11);
+		GameplayDriver.addNumberToPlayerSelections(13);
+		String s = GameplayDriver.findWinners();
+		System.out.println("Winners" + s);
+		
+	}
+	
 	
 	@ParameterizedTest
 	@ValueSource(ints = {1,4,8,10})
@@ -92,7 +129,7 @@ class MyTest {
 	}
 	
 	@ParameterizedTest
-	@ValueSource(ints = {2,3,5,6,7,9,11,12,13,14,15,16,17,18,19,20})
+	@ValueSource(ints = {2,3,5,6,7,9,11,12})
 	void BadNumberSpotsTest(int i) {
 		GameplayDriver.setRepeat(2);                //Player has played same card twice
 		GameplayDriver.setnumSpotsSelected(3);      //Player has selected 3 spots out of his total 4
