@@ -414,11 +414,11 @@ public class JavaFXTemplate extends Application {
 			if (GameplayDriver.readyToPlay()) {
 
 				// A draw is executed (1-4 draws)
-				GameplayDriver.incRepeat();
 
 				// Extracting button's text
-				//RadioButton nRB = (RadioButton) numDrawRadioGroup.getSelectedToggle();
-				//String nstr = nRB.getText();
+				GameplayDriver.setRepeat(1);
+				RadioButton selectedDraws = (RadioButton) numDrawRadioGroup.getSelectedToggle();
+				String draws = selectedDraws.getText();
 
 				// Update Labels
 				// Selected Choices by user or random
@@ -426,7 +426,7 @@ public class JavaFXTemplate extends Application {
 				
 				selectedBet.setText("$" + GameplayDriver.getBet());
 				
-				totalBet.setText("$" + GameplayDriver.getBet() * GameplayDriver.getRepeat());
+				totalBet.setText("$" + GameplayDriver.getBet() * Integer.parseInt(draws));
 
 				hintUser.setText("Drawing!");
 				GameplayDriver.findWinners();
@@ -450,18 +450,24 @@ public class JavaFXTemplate extends Application {
 					@Override
 					public void handle(ActionEvent event) {
 						drawOutput.setText(GameplayDriver.extractDrawingsString());
+						
+						GameplayDriver.findWinners();
+						String temp = " " + GameplayDriver.calculateWinnings(GameplayDriver.getBet());
+						amountWonOutput.setText("$" + temp);
+
+
+
+						// Reset
 
 						// Looping until all draws are complete
-						GameplayDriver.incRepeat();
 						//m++;
 
 
-						/*A Draw completes i.e 20 sub draws
+						// A Draw completes i.e 20 sub draws
 						if (m == 20) {
-							String tempAmount = null;
 
 							hintUser.setText("Continue to Next Draw");
-							if (Integer.parseInt(nstr) == GameplayDriver.getRepeat()) {
+							if (Integer.parseInt(draws) == GameplayDriver.getRepeat()) {
 								hintUser.setText("Game Over");
 								draw.setDisable(true);
 								// User can go back after game overs
@@ -470,38 +476,37 @@ public class JavaFXTemplate extends Application {
 								clearButton.setDisable(false);
 							} else {
 								draw.setDisable(false);
-							}
+							}}
 
 							// Show results
-							tempAmount = valueOf(GameplayDriver.getBet());
 							amountWonOutput.setText("$" + GameplayDriver.getWinnings());
 
-							if (GameplayDriver.getRepeat() == 1) {
-								oneNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
-								oneItemsMatched.setText(GameplayDriver.getMatches());
-								oneWon.setText("$" + tempAmount);
-							} else if (GameplayDriver.getRepeat() == 2) {
-								twoNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
-								twoItemsMatched.setText(GameplayDriver.getMatches());
-								twoWon.setText("$" + tempAmount);
-							} else if (GameplayDriver.getRepeat() == 3) {
-								threeNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
-								threeItemsMatched.setText(GameplayDriver.getMatches());
-								threeWon.setText("$" + tempAmount);
-							} else if (GameplayDriver.getRepeat() == 4) {
-								fourNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
-								fourItemsMatched.setText(GameplayDriver.getMatches());
-								fourWon.setText("$" + tempAmount);
-							} else {
-								throw new RuntimeException("Illegal Draw");
-							}
-
-							// Reset
-							GameplayDriver.reset();
+						if (GameplayDriver.getRepeat() == 1) {
+							oneNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
+							oneItemsMatched.setText(GameplayDriver.getMatches());
+							oneWon.setText("$" + temp);
+						} else if (GameplayDriver.getRepeat() == 2) {
+							twoNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
+							twoItemsMatched.setText(GameplayDriver.getMatches());
+							twoWon.setText("$" + temp);
+						} else if (GameplayDriver.getRepeat() == 3) {
+							threeNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
+							threeItemsMatched.setText(GameplayDriver.getMatches());
+							threeWon.setText("$" + temp);
+						} else if (GameplayDriver.getRepeat() == 4) {
+							fourNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
+							fourItemsMatched.setText(GameplayDriver.getMatches());
+							fourWon.setText("$" + temp);
+						} else {
+							throw new RuntimeException("Illegal Draw");
 						}
-					*/}
+						
+						GameplayDriver.incRepeat();
+						m++;
+						
+					}
 				
-						 }));
+					} ));
 
 				// Reset printing draws position to zero
 				m = 0;
