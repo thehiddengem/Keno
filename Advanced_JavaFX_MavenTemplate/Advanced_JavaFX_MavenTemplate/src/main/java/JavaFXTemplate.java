@@ -391,8 +391,8 @@ public class JavaFXTemplate extends Application {
 				// Update Labels
 				// Selected Choices by user or random
 				selectedChoice.setText(GameplayDriver.extractSelectionsString() );
-				selectedBet.setText("$" + GameplayDriver.getUserAmount());
-				totalBet.setText("$" + Integer.parseInt(GameplayDriver.getUserAmount()) * Integer.parseInt(nstr));
+				selectedBet.setText("$" + GameplayDriver.getBet());
+				totalBet.setText("$" + GameplayDriver.getBet() * Integer.parseInt(nstr));
 
 				hintUser.setText("Drawing!");
 				GameplayDriver.drawExecute();
@@ -740,4 +740,3 @@ public class JavaFXTemplate extends Application {
 		window.show();
 	}
 }
-
