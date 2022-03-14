@@ -302,12 +302,9 @@ class MyTest {
 		//Player picks are 5 9 11 13
 		
 		GameplayDriver.drawings[0] = 5;
-		
 		GameplayDriver.drawings[1] = 9;
-		
 		GameplayDriver.drawings[2] = 11;
 		GameplayDriver.drawings[3] = 13;
-		
 		GameplayDriver.drawings[4] = 87;
 		GameplayDriver.drawings[5] = 83;
 		GameplayDriver.drawings[6] = 79;
@@ -545,9 +542,7 @@ class MyTest {
 		GameplayDriver.setWinnings(1);
 		assertEquals(500000, GameplayDriver.calculateWinnings(5));
 		assertEquals(500001, GameplayDriver.getWinnings());
-		
-
-	}
+	}	
 	
 	@ParameterizedTest
 	@ValueSource(ints = {1,4,8,10})
@@ -555,7 +550,7 @@ class MyTest {
 		assertEquals(GameplayDriver.validNumSpots(i), true);
 		assertEquals(GameplayDriver.getnumSpotsTotal(), i);
 		assertEquals(GameplayDriver.getnumSpotsSelected(), 0);
-		assertEquals(GameplayDriver.getRepeat(), 0);
+		assertEquals(GameplayDriver.getRepeat(), 1);
 	}
 	
 	@ParameterizedTest
@@ -569,6 +564,4 @@ class MyTest {
 		assertEquals(GameplayDriver.getnumSpotsSelected(), 3);
 		assertEquals(GameplayDriver.getRepeat(), 2);
 	}
-	
-
 }
