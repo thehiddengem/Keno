@@ -12,7 +12,7 @@ public class GameplayDriver {
     
 
     
-    
+    public static Integer currentBet;
 	public static Integer totalWinnings;    // set by default constructor or setWinnings()
 	public static Integer numSpotsSelected; // how many buttons player has chosen currently as winners
 	public static Integer numSpotsTotal;    // how many total buttons a player may choose.
@@ -26,8 +26,9 @@ public class GameplayDriver {
     //
 	public static void init_GameplayDriver(Integer cash){
 		setWinnings(cash);
-		setRepeat(0);
+		setRepeat(1);
 		init_Drawings(); // sets drawings[0] to 1 .... drawings[79] to 80;
+		currentBet = 1;
 	}
 	
 	//
@@ -40,7 +41,7 @@ public class GameplayDriver {
 		if (n == 1 || n == 4 || n == 8 || n == 10) {
 			numSpotsSelected = 0; // init for next Scene where player picks his numbers
 			numSpotsTotal = n;    
-			repeatCards = 0;      // if the player is validating number of spots, he is using a new card. Thus 0
+			repeatCards = 1;      // if the player is validating number of spots, he is using a new card. Thus 0
 			
 			return true;
 		}
@@ -48,7 +49,7 @@ public class GameplayDriver {
 		else if (n == 0) {
 			numSpotsSelected = 0; // init for next Scene where player picks his numbers
 			numSpotsTotal = n;    
-			repeatCards = 0;      // if the player is validating number of spots, he is using a new card. Thus 0
+			repeatCards = 1;      // if the player is validating number of spots, he is using a new card. Thus 0
 			
 			return false;
 			
