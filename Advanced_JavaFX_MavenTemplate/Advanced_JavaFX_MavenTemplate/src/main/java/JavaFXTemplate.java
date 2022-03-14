@@ -243,16 +243,16 @@ public class JavaFXTemplate extends Application {
 		// Set Default draws to 1
 		numDrawRadioGroup.selectToggle(numDraw1);
 
-		/*// Set No. of Draws
+		// Set No. of Draws
 		// Each draw will have 20 sub drawings
-		numDraw1.setOnAction(e -> GameplayDriver.setNoOfDraws(20));
-		numDraw2.setOnAction(e -> GameplayDriver.setNoOfDraws(40));
-		numDraw3.setOnAction(e -> GameplayDriver.setNoOfDraws(60));
-		numDraw4.setOnAction(e -> GameplayDriver.setNoOfDraws(80));
+		numDraw1.setOnAction(e -> GameplayDriver.setRepeat(20));
+		numDraw2.setOnAction(e -> GameplayDriver.setRepeat(40));
+		numDraw3.setOnAction(e -> GameplayDriver.setRepeat(60));
+		numDraw4.setOnAction(e -> GameplayDriver.setRepeat(80));
 
 		// No. of Drawings Holder
 		HBox numDrawBox = new HBox(20, numDraw1, numDraw2, numDraw3, numDraw4);
-		*/
+		
 
 		// Spots
 		RadioButton spot1 = new RadioButton("1");
@@ -309,10 +309,10 @@ public class JavaFXTemplate extends Application {
 			ToggleButton btnNumber = new ToggleButton();
 			btnNumber.setText(String.valueOf(i));
 			btnNumber.setMinWidth(40);
-			/*btnNumber.setOnAction((ActionEvent) -> {
-				GameplayDriver.setnumSpotsSelected(btnNumber);
+			btnNumber.setOnAction((ActionEvent) -> {
+				GameplayDriver.addNumberToPlayerSelections(Integer.parseInt(btnNumber.getText()));
 			});
-			*/
+			
 
 			// Adding buttons to a list for later operations.
 			tglist.add(btnNumber);
@@ -360,6 +360,9 @@ public class JavaFXTemplate extends Application {
 		Label fourNoOfMatched = new Label("NILL");
 		Label fourItemsMatched = new Label("NILL");
 		Label fourWon = new Label("NILL");
+		
+		Label hintUser = new Label("Try Your Luck");
+		hintUser.setStyle("-fx-padding: 80; -fx-font: 24px \"Serif\";");
 
 
 		// Show Results in a single horizontal tab
@@ -423,7 +426,7 @@ public class JavaFXTemplate extends Application {
 							String tempAmount;
 
 							hintUser.setText("Continue to Next Draw");
-							if (Integer.parseInt(nstr) == GameplayDriver.getCurrentDraw()) {
+							if (Integer.parseInt(nstr) == GameplayDriver.getRepeat()) {
 								hintUser.setText("Game Over");
 								draw.setDisable(true);
 								// User can go back after game overs
@@ -438,19 +441,19 @@ public class JavaFXTemplate extends Application {
 							tempAmount = GameplayDriver.getAmountResult();
 							amountWonOutput.setText("$" + GameplayDriver.getWinnings());
 
-							if (GameplayDriver.getCurrentDraw() == 1) {
+							if (GameplayDriver.getRepeat() == 1) {
 								oneNoOfMatched.setText(GameplayDriver.getMatchedSize());
 								oneItemsMatched.setText(GameplayDriver.getMatchedList());
 								oneWon.setText("$" + tempAmount);
-							} else if (GameplayDriver.getCurrentDraw() == 2) {
+							} else if (GameplayDriver.getRepeat() == 2) {
 								twoNoOfMatched.setText(GameplayDriver.getMatchedSize());
 								twoItemsMatched.setText(GameplayDriver.getMatchedList());
 								twoWon.setText("$" + tempAmount);
-							} else if (GameplayDriver.getCurrentDraw() == 3) {
+							} else if (GameplayDriver.getRepeat() == 3) {
 								threeNoOfMatched.setText(GameplayDriver.getMatchedSize());
 								threeItemsMatched.setText(GameplayDriver.getMatchedList());
 								threeWon.setText("$" + tempAmount);
-							} else if (GameplayDriver.getCurrentDraw() == 4) {
+							} else if (GameplayDriver.getRepeat() == 4) {
 								fourNoOfMatched.setText(GameplayDriver.getMatchedSize());
 								fourItemsMatched.setText(GameplayDriver.getMatchedList());
 								fourWon.setText("$" + tempAmount);
