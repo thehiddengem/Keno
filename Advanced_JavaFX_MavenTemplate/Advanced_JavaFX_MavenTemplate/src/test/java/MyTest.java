@@ -1,5 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,54 @@ class MyTest {
 		GameplayDriver.validNumSpots(4);        // Must be set to 1,4,8,10 or it will fail. 
 		
 		
+		
+	}
+	@Test
+	void addAndRemoveSelectionsTest() {
+		GameplayDriver.addNumberToPlayerSelections(1);
+		GameplayDriver.addNumberToPlayerSelections(2);
+		GameplayDriver.addNumberToPlayerSelections(3);
+		GameplayDriver.addNumberToPlayerSelections(4);
+		assertEquals("1 2 3 4 ", GameplayDriver.extractSelectionsString());
+		
+		GameplayDriver.removeNumberPlayerSelections(2);
+		assertEquals("1 3 4 ", GameplayDriver.extractSelectionsString());
+		
+		GameplayDriver.addNumberToPlayerSelections(11);
+		GameplayDriver.addNumberToPlayerSelections(22);
+		GameplayDriver.addNumberToPlayerSelections(43);
+		GameplayDriver.addNumberToPlayerSelections(4);
+		
+		assertEquals("1 3 4 11 22 43 4 ", GameplayDriver.extractSelectionsString());
+		
+		
+	}
+	
+	@Test
+	void extractDrawingsTest() {
+		GameplayDriver.drawings[0] = 1;
+		GameplayDriver.drawings[1] = 10;
+		GameplayDriver.drawings[2] = 2;
+		GameplayDriver.drawings[3] = 3;
+		GameplayDriver.drawings[4] = 4;
+		GameplayDriver.drawings[5] = 5;
+		GameplayDriver.drawings[6] = 6;
+		GameplayDriver.drawings[7] = 7;
+		GameplayDriver.drawings[8] = 8;
+		GameplayDriver.drawings[9] = 9;
+		GameplayDriver.drawings[10] = 11;
+		GameplayDriver.drawings[11] = 12;
+		GameplayDriver.drawings[12] = 13;
+		GameplayDriver.drawings[13] = 14;
+		GameplayDriver.drawings[14] = 15;
+		GameplayDriver.drawings[15] = 16;
+		GameplayDriver.drawings[16] = 17;
+		GameplayDriver.drawings[17] = 18;
+		GameplayDriver.drawings[18] = 19;
+		GameplayDriver.drawings[19] = 20;
+		String s = GameplayDriver.extractDrawingsString();
+		
+		assertEquals(s, "1 10 2 3 4 5 6 7 8 9 11 12 13 14 15 16 17 18 19 20 ");
 		
 	}
 	
@@ -74,13 +124,46 @@ class MyTest {
 		
 		
 	}
-	/*
+	
 	@Test
-	void drawingsInitdTest() {
-		assertEquals(1, GameplayDriver.drawings.get(0));
-		assertEquals(2, GameplayDriver.drawings.get(1));
-		assertEquals(80, GameplayDriver.drawings.get(79));
-	}*/
+	void findWinnersHasOriginalValues() {
+		
+		GameplayDriver.reset();
+		GameplayDriver.findWinners();
+		
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		
+		for (int i = 0; i < 80; i++) {
+			arr.add(GameplayDriver.drawings[i]);
+		}
+		
+		for (int i = 1; i < 81; i++) {
+			assertEquals(true, arr.indexOf(i) >= 0);
+		}
+		
+		arr.clear();
+		GameplayDriver.findWinners();
+		GameplayDriver.findWinners();
+		GameplayDriver.findWinners();
+		GameplayDriver.findWinners();
+		GameplayDriver.findWinners();
+		GameplayDriver.findWinners();
+		GameplayDriver.findWinners();
+		GameplayDriver.findWinners();
+		GameplayDriver.findWinners();
+		GameplayDriver.findWinners();
+		
+		for (int i = 0; i < 80; i++) {
+			arr.add(GameplayDriver.drawings[i]);
+		}
+		// checks that values 1 - 80 exist
+		for (int i = 1; i < 81; i++) {
+			assertEquals(true, arr.indexOf(i) >= 0);
+		}
+		
+		
+		
+	}
 	
 	// This test verifies that every possible winning number 1-80, is actually still in the reshuffled list.
 	@Test
@@ -337,7 +420,7 @@ class MyTest {
 		assertEquals(0, GameplayDriver.getWinnings());
 		
 		GameplayDriver.matches.remove(4);
-		// Multiplier
+		// 10x  Multiplier
 		
 		GameplayDriver.setWinnings(100);
 		assertEquals(750, GameplayDriver.calculateWinnings(10));
@@ -347,7 +430,7 @@ class MyTest {
 	@Test
 	void winnings8Spot(){
 		GameplayDriver.reset();
-		GameplayDriver.setnumSpotsTotal(4);
+		GameplayDriver.setnumSpotsTotal(8);
 		
 		GameplayDriver.setWinnings(0);
 		GameplayDriver.matches.add(1);
@@ -356,34 +439,115 @@ class MyTest {
 		
 		GameplayDriver.setWinnings(0);
 		GameplayDriver.matches.add(2);
-		assertEquals(1, GameplayDriver.calculateWinnings(1));
-		assertEquals(1, GameplayDriver.getWinnings());
-		
-		GameplayDriver.setWinnings(0);
-		GameplayDriver.matches.add(3);
-		assertEquals(5, GameplayDriver.calculateWinnings(1));
-		assertEquals(5, GameplayDriver.getWinnings());
-		
-		GameplayDriver.setWinnings(0);
-		GameplayDriver.matches.add(4);
-		assertEquals(75, GameplayDriver.calculateWinnings(1));
-		assertEquals(75, GameplayDriver.getWinnings());
-		
-		// Cheating
-		GameplayDriver.setWinnings(0);
-		GameplayDriver.matches.add(5);
 		assertEquals(0, GameplayDriver.calculateWinnings(1));
 		assertEquals(0, GameplayDriver.getWinnings());
 		
-		GameplayDriver.matches.remove(4);
-		// Multiplier
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(3);
+		assertEquals(0, GameplayDriver.calculateWinnings(1));
+		assertEquals(0, GameplayDriver.getWinnings());
 		
-		GameplayDriver.setWinnings(100);
-		assertEquals(750, GameplayDriver.calculateWinnings(10));
-		assertEquals(850, GameplayDriver.getWinnings());
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.matches.add(4);
+		assertEquals(2, GameplayDriver.calculateWinnings(1));
+		assertEquals(3, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.matches.add(5);
+		assertEquals(12, GameplayDriver.calculateWinnings(1));
+		assertEquals(13, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.matches.add(6);
+		assertEquals(50, GameplayDriver.calculateWinnings(1));
+		assertEquals(51, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.matches.add(7);
+		assertEquals(750, GameplayDriver.calculateWinnings(1));
+		assertEquals(751, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.matches.add(8);
+		assertEquals(10000, GameplayDriver.calculateWinnings(1));
+		assertEquals(10001, GameplayDriver.getWinnings());
+		
+		// Cheating
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.matches.add(9);
+		assertEquals(0, GameplayDriver.calculateWinnings(1));
+		assertEquals(1, GameplayDriver.getWinnings());
+		
+		GameplayDriver.matches.remove(8);
+		
+		// 10x Multiplier
+		GameplayDriver.setWinnings(1);
+		assertEquals(100000, GameplayDriver.calculateWinnings(10));
+		assertEquals(100001, GameplayDriver.getWinnings());
 	}
 	
-	
+	@Test
+	void winnings10Spot(){
+		GameplayDriver.reset();
+		GameplayDriver.setnumSpotsTotal(10);
+		
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(1);
+		assertEquals(0, GameplayDriver.calculateWinnings(1));
+		assertEquals(0, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(2);
+		assertEquals(0, GameplayDriver.calculateWinnings(1));
+		assertEquals(0, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(3);
+		assertEquals(0, GameplayDriver.calculateWinnings(1));
+		assertEquals(0, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.matches.add(4);
+		assertEquals(0, GameplayDriver.calculateWinnings(1));
+		assertEquals(1, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.matches.add(5);
+		assertEquals(2, GameplayDriver.calculateWinnings(1));
+		assertEquals(3, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.matches.add(6);
+		assertEquals(15, GameplayDriver.calculateWinnings(1));
+		assertEquals(16, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.matches.add(7);
+		assertEquals(40, GameplayDriver.calculateWinnings(1));
+		assertEquals(41, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.matches.add(8);
+		assertEquals(450, GameplayDriver.calculateWinnings(1));
+		assertEquals(451, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.matches.add(9);
+		assertEquals(4250, GameplayDriver.calculateWinnings(1));
+		assertEquals(4251, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.matches.add(10);
+		assertEquals(100000, GameplayDriver.calculateWinnings(1));
+		assertEquals(100001, GameplayDriver.getWinnings());
+		
+		// 5x Multiplier
+		GameplayDriver.setWinnings(1);
+		assertEquals(500000, GameplayDriver.calculateWinnings(5));
+		assertEquals(500001, GameplayDriver.getWinnings());
+		
+
+	}
 	
 	@ParameterizedTest
 	@ValueSource(ints = {1,4,8,10})
@@ -395,7 +559,7 @@ class MyTest {
 	}
 	
 	@ParameterizedTest
-	@ValueSource(ints = {2,3,5,6,7,9,11,12})
+	@ValueSource(ints = {2,3,5,6,7,9,11,12,13,14})
 	void BadNumberSpotsTest(int i) {
 		GameplayDriver.setRepeat(2);                //Player has played same card twice
 		GameplayDriver.setnumSpotsSelected(3);      //Player has selected 3 spots out of his total 4
