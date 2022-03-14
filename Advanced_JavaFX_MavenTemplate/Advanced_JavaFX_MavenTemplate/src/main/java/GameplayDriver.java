@@ -9,6 +9,7 @@ public class GameplayDriver {
 	public static ArrayList<Integer> playerSelections = new ArrayList<Integer>();  
     public static ArrayList<Integer> matches = new ArrayList<Integer>();           
     public static Integer[] drawings = new Integer[80];                         //Size wont change, only order will change
+    public static String matchesString;
     
 
     
@@ -132,6 +133,7 @@ public class GameplayDriver {
 				result += drawings[i] + " "; // can we pass an Int to string like this?
 			}
 		}
+		matchesString = result;
 		return result;
 	}
 	
@@ -365,6 +367,7 @@ public class GameplayDriver {
 				result += drawings[i] + " "; // can we pass an Int to string like this?
 			}
 		}
+		matchesString = result;
 		return result;
 
 	}
