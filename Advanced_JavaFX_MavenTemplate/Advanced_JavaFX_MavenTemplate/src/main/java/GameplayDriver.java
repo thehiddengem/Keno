@@ -329,6 +329,14 @@ public class GameplayDriver {
 		return repeatCards;
 	}
 	
+	public static void setBet(Integer i) {
+		currentBet = i;
+	}
+	
+	public static Integer getBet() {
+		return currentBet;
+	}
+	
 	
 	
 	//*********** Testing Functions: These are for me. Use them if you need to, but be careful***************
