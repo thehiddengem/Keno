@@ -550,7 +550,7 @@ class MyTest {
 		assertEquals(GameplayDriver.validNumSpots(i), true);
 		assertEquals(GameplayDriver.getnumSpotsTotal(), i);
 		assertEquals(GameplayDriver.getnumSpotsSelected(), 0);
-		assertEquals(GameplayDriver.getRepeat(), 1);
+		assertEquals(GameplayDriver.getRepeat(), 0);
 	}
 	
 	@ParameterizedTest
