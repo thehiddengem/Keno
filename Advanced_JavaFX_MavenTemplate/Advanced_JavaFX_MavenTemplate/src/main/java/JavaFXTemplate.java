@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.animation.KeyFrame;
@@ -194,7 +193,8 @@ public class JavaFXTemplate extends Application {
 		// Draw Button
 		Button draw = new Button("Draw");
 		draw.setDisable(true);
-
+		
+		GameplayDriver.init_GameplayDriver(100);
 		// Bet Amount
 		RadioButton amount1 = new RadioButton("$1");
 		RadioButton amount2 = new RadioButton("$2");
@@ -215,7 +215,7 @@ public class JavaFXTemplate extends Application {
 		// Set Default amount to $1
 		amountRadioGroup.selectToggle(amount1);
 
-		// Set Bet
+		// Set No. of Draws
 		amount1.setOnAction(e -> GameplayDriver.setBet(1));
 		amount2.setOnAction(e -> GameplayDriver.setBet(2));
 		amount3.setOnAction(e -> GameplayDriver.setBet(3));
@@ -260,6 +260,7 @@ public class JavaFXTemplate extends Application {
 		RadioButton spot8 = new RadioButton("8");
 		RadioButton spot10 = new RadioButton("10");
 
+
 		// Spot ToggleGroup
 		ToggleGroup spotRadioGroup = new ToggleGroup();
 
@@ -284,35 +285,68 @@ public class JavaFXTemplate extends Application {
 			gridPane.setDisable(false);
 			checkBox.setDisable(false);
 			draw.setDisable(false);
+			GameplayDriver.reset();
+			GameplayDriver.validNumSpots(1);
+			spot1.setDisable(true);
+			spot4.setDisable(true);
+			spot8.setDisable(true);
+			spot10.setDisable(true);
+			
+
+			
 		});
 		spot4.setOnAction((ActionEvent) -> {
 
 			gridPane.setDisable(false);
 			checkBox.setDisable(false);
 			draw.setDisable(false);
+			GameplayDriver.reset();
+			GameplayDriver.validNumSpots(4);
+			gridPane.setDisable(false);
 		});
 		spot8.setOnAction((ActionEvent) -> {
 
 			gridPane.setDisable(false);
 			checkBox.setDisable(false);
 			draw.setDisable(false);
+			GameplayDriver.reset();
+			GameplayDriver.validNumSpots(8);
+
 		});
 		spot10.setOnAction((ActionEvent) -> {
 
 			gridPane.setDisable(false);
 			checkBox.setDisable(false);
 			draw.setDisable(false);
+			GameplayDriver.reset();
+			GameplayDriver.validNumSpots(10);
 		});
-
+		
 		// Create 80 Buttons Dynamically
-		for (i = 1; i <= 80; i++) {
+		for (i = 1; i < 81; i++) {
 			ToggleButton btnNumber = new ToggleButton();
 			btnNumber.setText(String.valueOf(i));
 			btnNumber.setMinWidth(40);
+			
 			btnNumber.setOnAction((ActionEvent) -> {
-				GameplayDriver.addNumberToPlayerSelections(Integer.parseInt(btnNumber.getText()));
+				if (!btnNumber.isSelected()) {
+					GameplayDriver.decSelected();
+					GameplayDriver.removeNumberPlayerSelections(Integer.parseInt(btnNumber.getText()));
+					btnNumber.setSelected(false);
+				}
+				
+				else {
+					if (GameplayDriver.incSelected()) {
+						GameplayDriver.addNumberToPlayerSelections(Integer.parseInt(btnNumber.getText()));
+						btnNumber.setSelected(true);
+					}
+					else {
+						btnNumber.setSelected(false);
+					}
+				}
 			});
 			
+
 			// Adding buttons to a list for later operations.
 			tglist.add(btnNumber);
 			// Adding buttons to the gridPane
@@ -347,23 +381,21 @@ public class JavaFXTemplate extends Application {
 		Label draw2 = new Label("2");
 		Label draw3 = new Label("3");
 		Label draw4 = new Label("4");
-		
 		Label oneNoOfMatched = new Label("NILL");
 		Label oneItemsMatched = new Label("NILL");
-		Label first = new Label("NILL");
-		
+		Label oneWon = new Label("NILL");
 		Label twoNoOfMatched = new Label("NILL");
 		Label twoItemsMatched = new Label("NILL");
-		Label second = new Label("NILL");
-		
+		Label twoWon = new Label("NILL");
 		Label threeNoOfMatched = new Label("NILL");
 		Label threeItemsMatched = new Label("NILL");
-		Label third = new Label("NILL");
-		
+		Label threeWon = new Label("NILL");
 		Label fourNoOfMatched = new Label("NILL");
 		Label fourItemsMatched = new Label("NILL");
-		Label fourth = new Label("NILL");
+		Label fourWon = new Label("NILL");
 		
+		Label hintUser = new Label("Try Your Luck");
+		hintUser.setStyle("-fx-padding: 80; -fx-font: 24px \"Serif\";");
 
 
 		// Show Results in a single horizontal tab
@@ -374,20 +406,19 @@ public class JavaFXTemplate extends Application {
 		draw.setOnAction((ActionEvent) -> {
 
 			// Extracting button's text
-			RadioButton sRB = (RadioButton) spotRadioGroup.getSelectedToggle();
-			String str = sRB.getText();
-			int number = Integer.parseInt(str);
+			//RadioButton sRB = (RadioButton) spotRadioGroup.getSelectedToggle();
+			//String str = sRB.getText();
+			//int number = Integer.parseInt(str);
 
 			// check validity of inputs and remaining draws before proceeding
-			if (GameplayDriver.validNumSpots(number) == true && GameplayDriver. getnumSpotsTotal() > 0
-					|| checkBox.isSelected() == true) {
+			if (GameplayDriver.readyToPlay()) {
 
 				// A draw is executed (1-4 draws)
-				GameplayDriver.incSelected();
+				GameplayDriver.incRepeat();
 
 				// Extracting button's text
-				RadioButton nRB = (RadioButton) numDrawRadioGroup.getSelectedToggle();
-				String nstr = nRB.getText();
+				//RadioButton nRB = (RadioButton) numDrawRadioGroup.getSelectedToggle();
+				//String nstr = nRB.getText();
 
 				// Update Labels
 				// Selected Choices by user or random
@@ -397,6 +428,7 @@ public class JavaFXTemplate extends Application {
 				
 				totalBet.setText("$" + GameplayDriver.getBet() * GameplayDriver.getRepeat());
 
+				hintUser.setText("Drawing!");
 				GameplayDriver.findWinners();
 				// Disable unnecessary tabs
 				amountBox.setDisable(true);
@@ -420,16 +452,17 @@ public class JavaFXTemplate extends Application {
 						drawOutput.setText(GameplayDriver.extractDrawingsString());
 
 						// Looping until all draws are complete
-						GameplayDriver.incSelected();
-						m++;
+						GameplayDriver.incRepeat();
+						//m++;
 
 
-						// A Draw completes i.e 20 sub draws
-						if (m== 20) {
-							Integer tempAmount=0;
+						/*A Draw completes i.e 20 sub draws
+						if (m == 20) {
+							String tempAmount = null;
 
+							hintUser.setText("Continue to Next Draw");
 							if (Integer.parseInt(nstr) == GameplayDriver.getRepeat()) {
-
+								hintUser.setText("Game Over");
 								draw.setDisable(true);
 								// User can go back after game overs
 								returnButton.setDisable(false);
@@ -440,26 +473,25 @@ public class JavaFXTemplate extends Application {
 							}
 
 							// Show results
-							tempAmount += GameplayDriver.getBet();
+							tempAmount = valueOf(GameplayDriver.getBet());
 							amountWonOutput.setText("$" + GameplayDriver.getWinnings());
-							
 
-							if (GameplayDriver.matches.size() == 1) {
+							if (GameplayDriver.getRepeat() == 1) {
 								oneNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
 								oneItemsMatched.setText(GameplayDriver.getMatches());
-								first.setText("$" + tempAmount);
-							} else if (GameplayDriver.matches.size() == 2) {
+								oneWon.setText("$" + tempAmount);
+							} else if (GameplayDriver.getRepeat() == 2) {
 								twoNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
 								twoItemsMatched.setText(GameplayDriver.getMatches());
-								second.setText("$" + tempAmount);
-							} else if (GameplayDriver.matches.size() == 3) {
+								twoWon.setText("$" + tempAmount);
+							} else if (GameplayDriver.getRepeat() == 3) {
 								threeNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
 								threeItemsMatched.setText(GameplayDriver.getMatches());
-								third.setText("$" + tempAmount);
-							} else if (GameplayDriver.matches.size() == 4) {
+								threeWon.setText("$" + tempAmount);
+							} else if (GameplayDriver.getRepeat() == 4) {
 								fourNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
 								fourItemsMatched.setText(GameplayDriver.getMatches());
-								fourth.setText("$" + tempAmount);
+								fourWon.setText("$" + tempAmount);
 							} else {
 								throw new RuntimeException("Illegal Draw");
 							}
@@ -467,17 +499,21 @@ public class JavaFXTemplate extends Application {
 							// Reset
 							GameplayDriver.reset();
 						}
-					}
-				}));
+					*/}
+				
+						 }));
 
 				// Reset printing draws position to zero
-				m=0;
+				m = 0;
 
 				// 20 Draws
 				timeline.setCycleCount(TOTAL_DRAWINGS - m);
 				timeline.play();
 
-			} 
+			} else {
+				// do Warn User
+				hintUser.setText("Check Your Spots");
+			}
 		});
 	
 
@@ -500,19 +536,16 @@ public class JavaFXTemplate extends Application {
 			twoNoOfMatched.setText("NILL");
 			threeNoOfMatched.setText("NILL");
 			fourNoOfMatched.setText("NILL");
-			
 			oneItemsMatched.setText("NILL");
 			twoItemsMatched.setText("NILL");
 			threeItemsMatched.setText("NILL");
 			fourItemsMatched.setText("NILL");
-			
 			totalBet.setText("NILL");
 			selectedBet.setText("NILL");
-			
-			first.setText("NILL");
-			second.setText("NILL");
-			third.setText("NILL");
-			fourth.setText("NILL");
+			oneWon.setText("NILL");
+			twoWon.setText("NILL");
+			threeWon.setText("NILL");
+			fourWon.setText("NILL");
 
 			// Enabling gridPane to fire
 			gridPane.setDisable(false);
@@ -539,6 +572,10 @@ public class JavaFXTemplate extends Application {
 
 		clearButton.setOnAction((ActionEvent) -> {
 
+			spot1.setDisable(false);
+			spot4.setDisable(false);
+			spot8.setDisable(false);
+			spot10.setDisable(false);
 			i = 0;
 			j = 0;
 			k = 0;
@@ -563,10 +600,10 @@ public class JavaFXTemplate extends Application {
 			fourItemsMatched.setText("NILL");
 			totalBet.setText("NILL");
 			selectedBet.setText("NILL");
-			first.setText("NILL");
-			second.setText("NILL");
-			third.setText("NILL");
-			fourth.setText("NILL");
+			oneWon.setText("NILL");
+			twoWon.setText("NILL");
+			threeWon.setText("NILL");
+			fourWon.setText("NILL");
 
 			// Enabling gridPane to fire
 			gridPane.setDisable(false);
@@ -641,22 +678,22 @@ public class JavaFXTemplate extends Application {
 		tab.add(draw1, 0, 1, 1, 1);
 		tab.add(oneNoOfMatched, 1, 1, 1, 1);
 		tab.add(oneItemsMatched, 2, 1, 1, 1);
-		tab.add(first, 3, 1, 1, 1);
+		tab.add(oneWon, 3, 1, 1, 1);
 
 		tab.add(draw2, 0, 2, 1, 1);
 		tab.add(twoNoOfMatched, 1, 2, 1, 1);
 		tab.add(twoItemsMatched, 2, 2, 1, 1);
-		tab.add(second, 3, 2, 1, 1);
+		tab.add(twoWon, 3, 2, 1, 1);
 
 		tab.add(draw3, 0, 3, 1, 1);
 		tab.add(threeNoOfMatched, 1, 3, 1, 1);
 		tab.add(threeItemsMatched, 2, 3, 1, 1);
-		tab.add(third, 3, 3, 1, 1);
+		tab.add(threeWon, 3, 3, 1, 1);
 
 		tab.add(draw4, 0, 4, 1, 1);
 		tab.add(fourNoOfMatched, 1, 4, 1, 1);
 		tab.add(fourItemsMatched, 2, 4, 1, 1);
-		tab.add(fourth, 3, 4, 1, 1);
+		tab.add(fourWon, 3, 4, 1, 1);
 
 		HBox betTab = new HBox(20);
 		betTab.getChildren().addAll(selectedBetText, selectedBet, totalBetText, totalBet);
@@ -671,27 +708,29 @@ public class JavaFXTemplate extends Application {
 		layout2.getChildren().addAll(menu2, hbox12);
 		layout2.setStyle("-fx-padding: 5;");
 
-		//New Look
+		/*
+		 * New Look (Modern) Adding CSS
+		 */
 		modernLook.setOnAction((ActionEvent) -> {
 
-			layout2.setStyle("-fx-padding: 5; -fx-background-color: #a52a2a;");
-			menuBar2.setStyle("-fx-background-color: #f0f8ff; -fx-font: 14px \"Serif\";");
-			draw.setStyle("-fx-background-color: BLACK; -fx-text-fill: white;" + " -fx-font: 18px \"Serif\";");
-			clearButton.setStyle("-fx-background-color: BLACK; -fx-text-fill: white;" + " -fx-font: 18px \"Serif\";");
-			returnButton.setStyle("-fx-background-color: BLACK; -fx-text-fill: white;" + "-fx-font: 18px \"Serif\";");
-			checkBoxText.setStyle("-fx-font: 16px \"Serif\"; -fx-font-style: italic;");
-			amountText.setStyle("-fx-font: 16px \"Serif\"; -fx-font-style: italic;");
-			drawText.setStyle("-fx-font: 16px \"Serif\"; -fx-font-style: italic;");
-			spotText.setStyle("-fx-font: 16px \"Serif\"; -fx-font-style: italic;");
+			layout2.setStyle("-fx-padding: 5; -fx-background-color: MINTCREAM;");
+			menuBar2.setStyle("-fx-background-color: GAINSBORO; -fx-font: 14px \"Serif\";");
+			draw.setStyle("-fx-background-color: NAVY; -fx-text-fill: white;" + " -fx-font: 14px \"Serif\";");
+			clearButton.setStyle("-fx-background-color: NAVY; -fx-text-fill: white;" + " -fx-font: 14px \"Serif\";");
+			returnButton.setStyle("-fx-background-color: NAVY; -fx-text-fill: white;" + "-fx-font: 14px \"Serif\";");
+			checkBoxText.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
+			amountText.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
+			drawText.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
+			spotText.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
 			vbox2.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
 			tab.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;" + "-fx-border-width: 2;"
-					+ "-fx-border-insets: 5;" + "-fx-border-radius: 5;" + "-fx-border-color: WHITE;");
+					+ "-fx-border-insets: 5;" + "-fx-border-radius: 5;" + "-fx-border-color: NAVY;");
 
 
 			for (i = 1; i <= 80; i++) {
 				ToggleButton btn = new ToggleButton();
 				btn = tglist.get(i - 1);
-				btn.setStyle("-fx-text-fill: NAVY; -fx-font: 14 \"Serif\"; -fx-border-color: BLACK;");
+				btn.setStyle("-fx-text-fill: NAVY; -fx-font: 14 \"Serif\"; -fx-border-color: NAVY;");
 			}
 
 		});
@@ -741,7 +780,7 @@ public class JavaFXTemplate extends Application {
 		window.show();
 	}
 
-	private String valueOf(Integer bet) {
+	private String valueOf(int l) {
 		// TODO Auto-generated method stub
 		return null;
 	}
