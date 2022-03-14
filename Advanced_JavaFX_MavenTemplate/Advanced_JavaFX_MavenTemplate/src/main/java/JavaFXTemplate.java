@@ -215,7 +215,7 @@ public class JavaFXTemplate extends Application {
 		// Set Default amount to $1
 		amountRadioGroup.selectToggle(amount1);
 
-		// Set No. of Draws
+		// Set Bet
 		amount1.setOnAction(e -> GameplayDriver.setBet(1));
 		amount2.setOnAction(e -> GameplayDriver.setBet(2));
 		amount3.setOnAction(e -> GameplayDriver.setBet(3));
@@ -245,10 +245,10 @@ public class JavaFXTemplate extends Application {
 
 		// Set No. of Draws
 		// Each draw will have 20 sub drawings
-		numDraw1.setOnAction(e -> GameplayDriver.setRepeat(20));
-		numDraw2.setOnAction(e -> GameplayDriver.setRepeat(40));
-		numDraw3.setOnAction(e -> GameplayDriver.setRepeat(60));
-		numDraw4.setOnAction(e -> GameplayDriver.setRepeat(80));
+		numDraw1.setOnAction(e -> GameplayDriver.setRepeat(1));
+		numDraw2.setOnAction(e -> GameplayDriver.setRepeat(2));
+		numDraw3.setOnAction(e -> GameplayDriver.setRepeat(3));
+		numDraw4.setOnAction(e -> GameplayDriver.setRepeat(4));
 
 		// No. of Drawings Holder
 		HBox numDrawBox = new HBox(20, numDraw1, numDraw2, numDraw3, numDraw4);
@@ -313,7 +313,6 @@ public class JavaFXTemplate extends Application {
 				GameplayDriver.addNumberToPlayerSelections(Integer.parseInt(btnNumber.getText()));
 			});
 			
-
 			// Adding buttons to a list for later operations.
 			tglist.add(btnNumber);
 			// Adding buttons to the gridPane
@@ -348,21 +347,23 @@ public class JavaFXTemplate extends Application {
 		Label draw2 = new Label("2");
 		Label draw3 = new Label("3");
 		Label draw4 = new Label("4");
+		
 		Label oneNoOfMatched = new Label("NILL");
 		Label oneItemsMatched = new Label("NILL");
-		Label oneWon = new Label("NILL");
+		Label first = new Label("NILL");
+		
 		Label twoNoOfMatched = new Label("NILL");
 		Label twoItemsMatched = new Label("NILL");
-		Label twoWon = new Label("NILL");
+		Label second = new Label("NILL");
+		
 		Label threeNoOfMatched = new Label("NILL");
 		Label threeItemsMatched = new Label("NILL");
-		Label threeWon = new Label("NILL");
+		Label third = new Label("NILL");
+		
 		Label fourNoOfMatched = new Label("NILL");
 		Label fourItemsMatched = new Label("NILL");
-		Label fourWon = new Label("NILL");
+		Label fourth = new Label("NILL");
 		
-		Label hintUser = new Label("Try Your Luck");
-		hintUser.setStyle("-fx-padding: 80; -fx-font: 24px \"Serif\";");
 
 
 		// Show Results in a single horizontal tab
@@ -390,14 +391,12 @@ public class JavaFXTemplate extends Application {
 
 				// Update Labels
 				// Selected Choices by user or random
-				GameplayDriver.getBet();
 				selectedChoice.setText(GameplayDriver.extractSelectionsString() );
 				
 				selectedBet.setText("$" + GameplayDriver.getBet());
 				
-				totalBet.setText("$" + GameplayDriver.getBet() * Integer.parseInt(nstr));
+				totalBet.setText("$" + GameplayDriver.getBet() * GameplayDriver.getRepeat());
 
-				hintUser.setText("Drawing!");
 				GameplayDriver.findWinners();
 				// Disable unnecessary tabs
 				amountBox.setDisable(true);
@@ -421,17 +420,16 @@ public class JavaFXTemplate extends Application {
 						drawOutput.setText(GameplayDriver.extractDrawingsString());
 
 						// Looping until all draws are complete
-						GameplayDriver.decSelected();
+						GameplayDriver.incSelected();
 						m++;
 
 
 						// A Draw completes i.e 20 sub draws
-						if (m == 20) {
-							String tempAmount = null;
+						if (m== 20) {
+							Integer tempAmount=0;
 
-							hintUser.setText("Continue to Next Draw");
 							if (Integer.parseInt(nstr) == GameplayDriver.getRepeat()) {
-								hintUser.setText("Game Over");
+
 								draw.setDisable(true);
 								// User can go back after game overs
 								returnButton.setDisable(false);
@@ -444,23 +442,24 @@ public class JavaFXTemplate extends Application {
 							// Show results
 							tempAmount += GameplayDriver.getBet();
 							amountWonOutput.setText("$" + GameplayDriver.getWinnings());
+							
 
-							if (GameplayDriver.getRepeat() == 1) {
+							if (GameplayDriver.matches.size() == 1) {
 								oneNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
 								oneItemsMatched.setText(GameplayDriver.getMatches());
-								oneWon.setText("$" + tempAmount);
-							} else if (GameplayDriver.getRepeat() == 2) {
+								first.setText("$" + tempAmount);
+							} else if (GameplayDriver.matches.size() == 2) {
 								twoNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
 								twoItemsMatched.setText(GameplayDriver.getMatches());
-								twoWon.setText("$" + tempAmount);
-							} else if (GameplayDriver.getRepeat() == 3) {
+								second.setText("$" + tempAmount);
+							} else if (GameplayDriver.matches.size() == 3) {
 								threeNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
 								threeItemsMatched.setText(GameplayDriver.getMatches());
-								threeWon.setText("$" + tempAmount);
-							} else if (GameplayDriver.getRepeat() == 4) {
+								third.setText("$" + tempAmount);
+							} else if (GameplayDriver.matches.size() == 4) {
 								fourNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
 								fourItemsMatched.setText(GameplayDriver.getMatches());
-								fourWon.setText("$" + tempAmount);
+								fourth.setText("$" + tempAmount);
 							} else {
 								throw new RuntimeException("Illegal Draw");
 							}
@@ -472,16 +471,13 @@ public class JavaFXTemplate extends Application {
 				}));
 
 				// Reset printing draws position to zero
-				m = 0;
+				m=0;
 
 				// 20 Draws
 				timeline.setCycleCount(TOTAL_DRAWINGS - m);
 				timeline.play();
 
-			} else {
-				// do Warn User
-				hintUser.setText("Check Your Spots");
-			}
+			} 
 		});
 	
 
@@ -504,16 +500,19 @@ public class JavaFXTemplate extends Application {
 			twoNoOfMatched.setText("NILL");
 			threeNoOfMatched.setText("NILL");
 			fourNoOfMatched.setText("NILL");
+			
 			oneItemsMatched.setText("NILL");
 			twoItemsMatched.setText("NILL");
 			threeItemsMatched.setText("NILL");
 			fourItemsMatched.setText("NILL");
+			
 			totalBet.setText("NILL");
 			selectedBet.setText("NILL");
-			oneWon.setText("NILL");
-			twoWon.setText("NILL");
-			threeWon.setText("NILL");
-			fourWon.setText("NILL");
+			
+			first.setText("NILL");
+			second.setText("NILL");
+			third.setText("NILL");
+			fourth.setText("NILL");
 
 			// Enabling gridPane to fire
 			gridPane.setDisable(false);
@@ -564,10 +563,10 @@ public class JavaFXTemplate extends Application {
 			fourItemsMatched.setText("NILL");
 			totalBet.setText("NILL");
 			selectedBet.setText("NILL");
-			oneWon.setText("NILL");
-			twoWon.setText("NILL");
-			threeWon.setText("NILL");
-			fourWon.setText("NILL");
+			first.setText("NILL");
+			second.setText("NILL");
+			third.setText("NILL");
+			fourth.setText("NILL");
 
 			// Enabling gridPane to fire
 			gridPane.setDisable(false);
@@ -642,22 +641,22 @@ public class JavaFXTemplate extends Application {
 		tab.add(draw1, 0, 1, 1, 1);
 		tab.add(oneNoOfMatched, 1, 1, 1, 1);
 		tab.add(oneItemsMatched, 2, 1, 1, 1);
-		tab.add(oneWon, 3, 1, 1, 1);
+		tab.add(first, 3, 1, 1, 1);
 
 		tab.add(draw2, 0, 2, 1, 1);
 		tab.add(twoNoOfMatched, 1, 2, 1, 1);
 		tab.add(twoItemsMatched, 2, 2, 1, 1);
-		tab.add(twoWon, 3, 2, 1, 1);
+		tab.add(second, 3, 2, 1, 1);
 
 		tab.add(draw3, 0, 3, 1, 1);
 		tab.add(threeNoOfMatched, 1, 3, 1, 1);
 		tab.add(threeItemsMatched, 2, 3, 1, 1);
-		tab.add(threeWon, 3, 3, 1, 1);
+		tab.add(third, 3, 3, 1, 1);
 
 		tab.add(draw4, 0, 4, 1, 1);
 		tab.add(fourNoOfMatched, 1, 4, 1, 1);
 		tab.add(fourItemsMatched, 2, 4, 1, 1);
-		tab.add(fourWon, 3, 4, 1, 1);
+		tab.add(fourth, 3, 4, 1, 1);
 
 		HBox betTab = new HBox(20);
 		betTab.getChildren().addAll(selectedBetText, selectedBet, totalBetText, totalBet);
@@ -672,29 +671,27 @@ public class JavaFXTemplate extends Application {
 		layout2.getChildren().addAll(menu2, hbox12);
 		layout2.setStyle("-fx-padding: 5;");
 
-		/*
-		 * New Look (Modern) Adding CSS
-		 */
+		//New Look
 		modernLook.setOnAction((ActionEvent) -> {
 
-			layout2.setStyle("-fx-padding: 5; -fx-background-color: MINTCREAM;");
-			menuBar2.setStyle("-fx-background-color: GAINSBORO; -fx-font: 14px \"Serif\";");
-			draw.setStyle("-fx-background-color: NAVY; -fx-text-fill: white;" + " -fx-font: 14px \"Serif\";");
-			clearButton.setStyle("-fx-background-color: NAVY; -fx-text-fill: white;" + " -fx-font: 14px \"Serif\";");
-			returnButton.setStyle("-fx-background-color: NAVY; -fx-text-fill: white;" + "-fx-font: 14px \"Serif\";");
-			checkBoxText.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
-			amountText.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
-			drawText.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
-			spotText.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
+			layout2.setStyle("-fx-padding: 5; -fx-background-color: #a52a2a;");
+			menuBar2.setStyle("-fx-background-color: #f0f8ff; -fx-font: 14px \"Serif\";");
+			draw.setStyle("-fx-background-color: BLACK; -fx-text-fill: white;" + " -fx-font: 18px \"Serif\";");
+			clearButton.setStyle("-fx-background-color: BLACK; -fx-text-fill: white;" + " -fx-font: 18px \"Serif\";");
+			returnButton.setStyle("-fx-background-color: BLACK; -fx-text-fill: white;" + "-fx-font: 18px \"Serif\";");
+			checkBoxText.setStyle("-fx-font: 16px \"Serif\"; -fx-font-style: italic;");
+			amountText.setStyle("-fx-font: 16px \"Serif\"; -fx-font-style: italic;");
+			drawText.setStyle("-fx-font: 16px \"Serif\"; -fx-font-style: italic;");
+			spotText.setStyle("-fx-font: 16px \"Serif\"; -fx-font-style: italic;");
 			vbox2.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
 			tab.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;" + "-fx-border-width: 2;"
-					+ "-fx-border-insets: 5;" + "-fx-border-radius: 5;" + "-fx-border-color: NAVY;");
+					+ "-fx-border-insets: 5;" + "-fx-border-radius: 5;" + "-fx-border-color: WHITE;");
 
 
 			for (i = 1; i <= 80; i++) {
 				ToggleButton btn = new ToggleButton();
 				btn = tglist.get(i - 1);
-				btn.setStyle("-fx-text-fill: NAVY; -fx-font: 14 \"Serif\"; -fx-border-color: NAVY;");
+				btn.setStyle("-fx-text-fill: NAVY; -fx-font: 14 \"Serif\"; -fx-border-color: BLACK;");
 			}
 
 		});
