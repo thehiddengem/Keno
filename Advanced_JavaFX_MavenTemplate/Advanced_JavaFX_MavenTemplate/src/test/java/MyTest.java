@@ -209,7 +209,7 @@ class MyTest {
 		assertEquals(4, GameplayDriver.getnumSpotsSelected());
 		
 		assertEquals(true, GameplayDriver.decSelected()); // Player deselects a button because he wants to change 7 to 13
-		GameplayDriver.removeNumberToPlayerSelections(7);
+		GameplayDriver.removeNumberPlayerSelections(7);
 		assertEquals(3, GameplayDriver.getnumSpotsSelected());
 		
 		assertEquals(true, GameplayDriver.incSelected());      // Player wants to select button 13
@@ -261,9 +261,127 @@ class MyTest {
 		assertEquals(4, GameplayDriver.getnumSpotsSelected());
 		assertEquals(4, GameplayDriver.getnumSpotsTotal());
 		assertEquals(4, GameplayDriver.playerSelections.size());
+		assertEquals(true,GameplayDriver.readyToPlay());
 		System.out.println(GameplayDriver.extractSelectionsString());
+		
+		GameplayDriver.autoPicks(8);
+		assertEquals(8, GameplayDriver.getnumSpotsSelected());
+		assertEquals(8, GameplayDriver.getnumSpotsTotal());
+		assertEquals(8, GameplayDriver.playerSelections.size());
+		assertEquals(true,GameplayDriver.readyToPlay());
+		
+		GameplayDriver.autoPicks(10);
+		assertEquals(10, GameplayDriver.getnumSpotsSelected());
+		assertEquals(10, GameplayDriver.getnumSpotsTotal());
+		assertEquals(10, GameplayDriver.playerSelections.size());
+		assertEquals(true,GameplayDriver.readyToPlay());
 	}
 	
+	@Test
+	void winnings1Spot(){
+		GameplayDriver.reset();
+		GameplayDriver.setWinnings(1);
+		GameplayDriver.setnumSpotsTotal(1);
+		
+		GameplayDriver.matches.add(1);
+		assertEquals(2, GameplayDriver.calculateWinnings(1));
+		assertEquals(3, GameplayDriver.getWinnings());
+		
+		// Shouldn't be possible. Indicates cheating. Should return 0;
+		GameplayDriver.matches.add(2);
+		assertEquals(0, GameplayDriver.calculateWinnings(1));
+		assertEquals(3, GameplayDriver.getWinnings());
+		
+		GameplayDriver.matches.remove(1);
+		assertEquals(2, GameplayDriver.calculateWinnings(1));
+		assertEquals(5, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(1);
+		assertEquals(4, GameplayDriver.calculateWinnings(2));
+		assertEquals(5, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(1);
+		assertEquals(6, GameplayDriver.calculateWinnings(3));
+		assertEquals(7, GameplayDriver.getWinnings());
+	}
+	
+	@Test
+	void winnings4Spot(){
+		GameplayDriver.reset();
+		GameplayDriver.setnumSpotsTotal(4);
+		
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(1);
+		assertEquals(0, GameplayDriver.calculateWinnings(1));
+		assertEquals(0, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(2);
+		assertEquals(1, GameplayDriver.calculateWinnings(1));
+		assertEquals(1, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(3);
+		assertEquals(5, GameplayDriver.calculateWinnings(1));
+		assertEquals(5, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(4);
+		assertEquals(75, GameplayDriver.calculateWinnings(1));
+		assertEquals(75, GameplayDriver.getWinnings());
+		
+		// Cheating
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(5);
+		assertEquals(0, GameplayDriver.calculateWinnings(1));
+		assertEquals(0, GameplayDriver.getWinnings());
+		
+		GameplayDriver.matches.remove(4);
+		// Multiplier
+		
+		GameplayDriver.setWinnings(100);
+		assertEquals(750, GameplayDriver.calculateWinnings(10));
+		assertEquals(850, GameplayDriver.getWinnings());
+	}
+	
+	@Test
+	void winnings8Spot(){
+		GameplayDriver.reset();
+		GameplayDriver.setnumSpotsTotal(4);
+		
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(1);
+		assertEquals(0, GameplayDriver.calculateWinnings(1));
+		assertEquals(0, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(2);
+		assertEquals(1, GameplayDriver.calculateWinnings(1));
+		assertEquals(1, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(3);
+		assertEquals(5, GameplayDriver.calculateWinnings(1));
+		assertEquals(5, GameplayDriver.getWinnings());
+		
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(4);
+		assertEquals(75, GameplayDriver.calculateWinnings(1));
+		assertEquals(75, GameplayDriver.getWinnings());
+		
+		// Cheating
+		GameplayDriver.setWinnings(0);
+		GameplayDriver.matches.add(5);
+		assertEquals(0, GameplayDriver.calculateWinnings(1));
+		assertEquals(0, GameplayDriver.getWinnings());
+		
+		GameplayDriver.matches.remove(4);
+		// Multiplier
+		
+		GameplayDriver.setWinnings(100);
+		assertEquals(750, GameplayDriver.calculateWinnings(10));
+		assertEquals(850, GameplayDriver.getWinnings());
+	}
 	
 	
 	
