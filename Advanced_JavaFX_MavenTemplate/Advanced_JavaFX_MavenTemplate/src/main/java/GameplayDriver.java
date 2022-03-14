@@ -339,6 +339,10 @@ public class GameplayDriver {
 		return currentBet;
 	}
 	
+	public static String getMatches() {
+		return matchesString;
+	}
+	
 	
 	
 	//*********** Testing Functions: These are for me. Use them if you need to, but be careful***************
