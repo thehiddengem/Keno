@@ -157,7 +157,12 @@ public class JavaFXTemplate extends Application {
 		});
 		MenuItem odd2 = new MenuItem("Odds");
 		odd2.setOnAction((ActionEvent) -> {
-			text1.setText("Odds rules");
+		    text1.setText("10 Spot Game: 1 in 9.05\n"
+		    		+ "8 Spot Game: 1 in 9.77\n"
+		    		+ "4 Spot Game: 1 in 3.86\n"
+		    		+ "1 Spot Game: 1 in 4.00\n");
+			text1.setX(50);
+			text1.setY(50);
 			currentScene = scene2;
 			window.setScene(scene3);
 		});
@@ -238,15 +243,16 @@ public class JavaFXTemplate extends Application {
 		// Set Default draws to 1
 		numDrawRadioGroup.selectToggle(numDraw1);
 
-		// Set No. of Draws
+		/*// Set No. of Draws
 		// Each draw will have 20 sub drawings
-		/*numDraw1.setOnAction(e -> GameplayDriver.setNoOfDraws(20));
+		numDraw1.setOnAction(e -> GameplayDriver.setNoOfDraws(20));
 		numDraw2.setOnAction(e -> GameplayDriver.setNoOfDraws(40));
 		numDraw3.setOnAction(e -> GameplayDriver.setNoOfDraws(60));
-		numDraw4.setOnAction(e -> GameplayDriver.setNoOfDraws(80));*/
+		numDraw4.setOnAction(e -> GameplayDriver.setNoOfDraws(80));
 
 		// No. of Drawings Holder
 		HBox numDrawBox = new HBox(20, numDraw1, numDraw2, numDraw3, numDraw4);
+		*/
 
 		// Spots
 		RadioButton spot1 = new RadioButton("1");
@@ -360,19 +366,20 @@ public class JavaFXTemplate extends Application {
 		HBox drawBox = new HBox(10);
 		drawBox.getChildren().addAll(drawNotice, drawOutput, amountWonNotice, amountWonOutput);
 
-		/*// Let the draw Begin
+		// Let the draw Begin
 		draw.setOnAction((ActionEvent) -> {
 
 			// Extracting button's text
 			RadioButton sRB = (RadioButton) spotRadioGroup.getSelectedToggle();
 			String str = sRB.getText();
+			int number = Integer.parseInt(str);
 
 			// check validity of inputs and remaining draws before proceeding
-			if (GameplayDriver.checkSpots(str) == true && GameplayDriver.getNoOfDraws() > 0
+			if (GameplayDriver.validNumSpots(number) == true && GameplayDriver. getnumSpotsTotal() > 0
 					|| checkBox.isSelected() == true) {
 
 				// A draw is executed (1-4 draws)
-				GameplayDriver.nextDraw();
+				GameplayDriver.incSelected();
 
 				// Extracting button's text
 				RadioButton nRB = (RadioButton) numDrawRadioGroup.getSelectedToggle();
@@ -380,13 +387,12 @@ public class JavaFXTemplate extends Application {
 
 				// Update Labels
 				// Selected Choices by user or random
-				selectedChoice.setText(GameplayDriver.getSelectedList());
+				selectedChoice.setText(GameplayDriver.extractSelectionsString() );
 				selectedBet.setText("$" + GameplayDriver.getUserAmount());
 				totalBet.setText("$" + Integer.parseInt(GameplayDriver.getUserAmount()) * Integer.parseInt(nstr));
 
 				hintUser.setText("Drawing!");
 				GameplayDriver.drawExecute();
-
 				// Disable unnecessary tabs
 				amountBox.setDisable(true);
 				spotBox.setDisable(true);
@@ -401,7 +407,7 @@ public class JavaFXTemplate extends Application {
 				 * Adding Pause between Draws Threaded Execution, allows other functions to
 				 * execute between drawings.
 				 */
-		/*
+		
 				Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
 
 					@Override
@@ -409,7 +415,7 @@ public class JavaFXTemplate extends Application {
 						drawOutput.setText(GameplayDriver.getDrawResult(m));
 
 						// Looping until all draws are complete
-						GameplayDriver.decrementNoOfDraws();
+						GameplayDriver.decSelected();
 						m++;
 
 						// A Draw completes i.e 20 sub draws
@@ -430,7 +436,7 @@ public class JavaFXTemplate extends Application {
 
 							// Show results
 							tempAmount = GameplayDriver.getAmountResult();
-							amountWonOutput.setText("$" + GameplayDriver.getTotalAmountWon());
+							amountWonOutput.setText("$" + GameplayDriver.getWinnings());
 
 							if (GameplayDriver.getCurrentDraw() == 1) {
 								oneNoOfMatched.setText(GameplayDriver.getMatchedSize());
@@ -453,7 +459,7 @@ public class JavaFXTemplate extends Application {
 							}
 
 							// Reset
-							GameplayDriver.resetDraw();
+							GameplayDriver.reset();
 						}
 					}
 				}));
@@ -470,7 +476,7 @@ public class JavaFXTemplate extends Application {
 				hintUser.setText("Check Your Spots");
 			}
 		});
-		*/
+	
 
 		// Back Button Returns to Main Menu and Resets the Game
 		returnButton.setOnAction((ActionEvent) -> {
@@ -519,7 +525,7 @@ public class JavaFXTemplate extends Application {
 				checkBox.fire();
 			checkBox.setDisable(true);
 
-			GameplayDriver.init_GameplayDriver(0);
+			GameplayDriver.reset();
 
 			// Go to Main Menu
 			window.setScene(scene1);
@@ -572,7 +578,7 @@ public class JavaFXTemplate extends Application {
 				checkBox.fire();
 			checkBox.setDisable(true);
 
-			GameplayDriver.init_GameplayDriver(0);
+			GameplayDriver.reset();
 		});
 
 		// On setting checkBox, manual input is restricted
@@ -731,3 +737,4 @@ public class JavaFXTemplate extends Application {
 		window.show();
 	}
 }
+
