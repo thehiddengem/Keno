@@ -216,11 +216,11 @@ public class JavaFXTemplate extends Application {
 		amountRadioGroup.selectToggle(amount1);
 
 		// Set No. of Draws
-		amount1.setOnAction(e -> GameplayDriver.setnumSpotsTotal(1));
-		amount2.setOnAction(e -> GameplayDriver.setnumSpotsTotal(2));
-		amount3.setOnAction(e -> GameplayDriver.setnumSpotsTotal(3));
-		amount5.setOnAction(e -> GameplayDriver.setnumSpotsTotal(5));
-		amount10.setOnAction(e -> GameplayDriver.setnumSpotsTotal(10));
+		amount1.setOnAction(e -> GameplayDriver.setBet(1));
+		amount2.setOnAction(e -> GameplayDriver.setBet(2));
+		amount3.setOnAction(e -> GameplayDriver.setBet(3));
+		amount5.setOnAction(e -> GameplayDriver.setBet(5));
+		amount10.setOnAction(e -> GameplayDriver.setBet(10));
 
 		// No. of Drawings Holder
 		HBox amountBox = new HBox(20, amount1, amount2, amount3, amount5, amount10);
@@ -390,12 +390,15 @@ public class JavaFXTemplate extends Application {
 
 				// Update Labels
 				// Selected Choices by user or random
+				GameplayDriver.getBet();
 				selectedChoice.setText(GameplayDriver.extractSelectionsString() );
+				
 				selectedBet.setText("$" + GameplayDriver.getBet());
+				
 				totalBet.setText("$" + GameplayDriver.getBet() * Integer.parseInt(nstr));
 
 				hintUser.setText("Drawing!");
-				GameplayDriver.drawExecute();
+				GameplayDriver.findWinners();
 				// Disable unnecessary tabs
 				amountBox.setDisable(true);
 				spotBox.setDisable(true);
@@ -415,15 +418,16 @@ public class JavaFXTemplate extends Application {
 
 					@Override
 					public void handle(ActionEvent event) {
-						drawOutput.setText(GameplayDriver.getDrawResult(m));
+						drawOutput.setText(GameplayDriver.extractDrawingsString());
 
 						// Looping until all draws are complete
 						GameplayDriver.decSelected();
 						m++;
 
+
 						// A Draw completes i.e 20 sub draws
 						if (m == 20) {
-							String tempAmount;
+							String tempAmount = null;
 
 							hintUser.setText("Continue to Next Draw");
 							if (Integer.parseInt(nstr) == GameplayDriver.getRepeat()) {
@@ -438,24 +442,24 @@ public class JavaFXTemplate extends Application {
 							}
 
 							// Show results
-							tempAmount = GameplayDriver.getAmountResult();
+							tempAmount += GameplayDriver.getBet();
 							amountWonOutput.setText("$" + GameplayDriver.getWinnings());
 
 							if (GameplayDriver.getRepeat() == 1) {
-								oneNoOfMatched.setText(GameplayDriver.getMatchedSize());
-								oneItemsMatched.setText(GameplayDriver.getMatchedList());
+								oneNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
+								oneItemsMatched.setText(GameplayDriver.getMatches());
 								oneWon.setText("$" + tempAmount);
 							} else if (GameplayDriver.getRepeat() == 2) {
-								twoNoOfMatched.setText(GameplayDriver.getMatchedSize());
-								twoItemsMatched.setText(GameplayDriver.getMatchedList());
+								twoNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
+								twoItemsMatched.setText(GameplayDriver.getMatches());
 								twoWon.setText("$" + tempAmount);
 							} else if (GameplayDriver.getRepeat() == 3) {
-								threeNoOfMatched.setText(GameplayDriver.getMatchedSize());
-								threeItemsMatched.setText(GameplayDriver.getMatchedList());
+								threeNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
+								threeItemsMatched.setText(GameplayDriver.getMatches());
 								threeWon.setText("$" + tempAmount);
 							} else if (GameplayDriver.getRepeat() == 4) {
-								fourNoOfMatched.setText(GameplayDriver.getMatchedSize());
-								fourItemsMatched.setText(GameplayDriver.getMatchedList());
+								fourNoOfMatched.setText(valueOf(GameplayDriver.matches.size()));
+								fourItemsMatched.setText(GameplayDriver.getMatches());
 								fourWon.setText("$" + tempAmount);
 							} else {
 								throw new RuntimeException("Illegal Draw");
@@ -738,5 +742,10 @@ public class JavaFXTemplate extends Application {
 		window.setScene(scene1);
 		window.setTitle("KENO");
 		window.show();
+	}
+
+	private String valueOf(Integer bet) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
