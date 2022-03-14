@@ -240,7 +240,7 @@ public class GameplayDriver {
 				winnings = 4250;
 				}
 			else if (n == 10) {
-				winnings = 1000000;
+				winnings = 100000;
 				}
 			break;	
 		}
@@ -262,7 +262,7 @@ public class GameplayDriver {
 	
 	// remove a number to player selected array. Should be used with with Boolean decSelected() to avoid adding too many numbers
 	public static void removeNumberPlayerSelections(Integer i) {
-		playerSelections.remove(playerSelections.get(i));
+		playerSelections.remove(playerSelections.indexOf(i));
 	}
 
 	
