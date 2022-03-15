@@ -323,6 +323,11 @@ public class GameplayDriver {
 		repeatCards++;
 		return repeatCards;
 	}
+	
+	public static Integer decRepeat() {
+		repeatCards--;
+		return repeatCards;
+	}
 	public static void setRepeat(Integer repeat) {
 		repeatCards = repeat;
 	}
@@ -341,6 +346,10 @@ public class GameplayDriver {
 	
 	public static String getMatches() {
 		return matchesString;
+	}
+	
+	static void resetDraw() {
+		matches.clear();
 	}
 	
 	
