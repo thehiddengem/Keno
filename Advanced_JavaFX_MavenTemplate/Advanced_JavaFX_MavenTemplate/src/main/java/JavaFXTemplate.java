@@ -1,4 +1,14 @@
-import java.io.IOException;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+
 import java.util.ArrayList;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
@@ -8,31 +18,21 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+
 
 public class JavaFXTemplate extends Application {
-
-	Stage window;
-	Scene scene1, scene2, scene3, currentScene;
-
+	
+	private static ArrayList<ToggleButton> list = new ArrayList<ToggleButton>();
+	Scene startScene, gameScene, changed, current;
 	private int i = 0, j = 0, k = 0, m = 0;
 
-	private static ArrayList<ToggleButton> tglist = new ArrayList<ToggleButton>();
+	Stage main;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -41,96 +41,92 @@ public class JavaFXTemplate extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		window = primaryStage;
+		main = primaryStage;
 
-		// Scene 3 Text (Shows rules or odds based on user's choice)
-		Text text1 = new Text();
-
-		/* Scene 1 Starts */
+		// Shows rules or odds based on user's choice)
+		Text rules1 = new Text();
 		VBox layout1 = new VBox(10);
-		scene1 = new Scene(layout1, 800, 640);
+		startScene = new Scene(layout1, 800, 800);
 
 		// Menu
 		Menu rules = new Menu("Rules");
 		Menu odds = new Menu("Odds of Winning");
-		Menu exitMenu = new Menu("Exit");
+		Menu exit = new Menu("Exit");
 
 		// Create a menu bar
 		MenuBar menuBar = new MenuBar();
-		// Add menus to a menu bar
-		menuBar.getMenus().addAll(rules, odds, exitMenu);
-
-		// Create the Menu Box
+		menuBar.getMenus().addAll(rules, odds, exit);
 		HBox menu = new HBox(20);
-		// Add the MenuBar to the Menu Box
 		menu.getChildren().add(menuBar);
-
-		// Sub Menu
-		MenuItem exitConfirm = new MenuItem("Confirm Exit");
-		exitConfirm.setOnAction(e -> window.close());
-		MenuItem rule1 = new MenuItem("Rules");
+		
+		MenuItem confirmEx = new MenuItem("Confirm Exit");
+		confirmEx.setOnAction(e -> main.close());
+		
+		
+		MenuItem rule1 = new MenuItem("Rules");  //output Rules by click
 		rule1.setOnAction((ActionEvent) -> {
 
-			text1.setText("The game of Keno is played by picking a set of numbers between 1 and 80. From there, 20 numbers are drawn randomly.\nIf the numbers drawn match the numbers you selected, you win. The amount of numbers you picked and how many of them you got right determine the amount of your payout.\n"
+			rules1.setText("The game of Keno is played by picking a set of numbers between 1 and 80. From there, 20 numbers are drawn randomly.\nIf the numbers drawn match the numbers you selected, you win. The amount of numbers you picked and how many of them you got right determine the amount of your payout.\n"
 					+ "\n"
 					+ "You do not need to match all 20 numbers to get the jackpot. The jackpots are usually awarded for a 9- or 10-number ticket in which all numbers were hit. On average, people usually play between 3-9 numbers.\n"
 					+ "\n"
 					+ "");
-			text1.setX(50);
-			text1.setY(50);
+			rules1.setX(50);
+			rules1.setY(50);
 
 
-			currentScene = scene1;
-			window.setScene(scene3);
+			current = startScene;
+			main.setScene(changed);
 		});
-		MenuItem odd1 = new MenuItem("Odds");
+		
+		
+		
+		MenuItem odd1 = new MenuItem("Odds");  //output Odds of Winning by click
 		odd1.setOnAction((ActionEvent) -> {
 
 			
-		    text1.setText("10 Spot Game: 1 in 9.05\n"
+		    rules1.setText("10 Spot Game: 1 in 9.05\n"
 		    		+ "8 Spot Game: 1 in 9.77\n"
 		    		+ "4 Spot Game: 1 in 3.86\n"
 		    		+ "1 Spot Game: 1 in 4.00\n");
-			text1.setX(50);
-			text1.setY(50);
+			rules1.setX(50);
+			rules1.setY(50);
 
-			currentScene = scene1;
-			window.setScene(scene3);
+			current = startScene;
+			main.setScene(changed);
 		});
 
 		// Adding Sub Menu
-		exitMenu.getItems().addAll(exitConfirm);
+		exit.getItems().addAll(confirmEx);
 		rules.getItems().addAll(rule1);
 		odds.getItems().addAll(odd1);
 
-		// Button 1
-		Button button1 = new Button("Start Game");
-		button1.setOnAction(e -> window.setScene(scene2));
+		Button start1 = new Button("Start Game");
+		start1.setOnAction(e -> main.setScene(gameScene));
 
-		// Welcome
+		
 		Label welcomeText = new Label("Welcome to Keno");
 		welcomeText.setAlignment(Pos.BASELINE_CENTER);
-		welcomeText.setStyle("-fx-font: 24px \"Serif\";");
+		welcomeText.setStyle("-fx-font: 22px \"Serif\";");
 
 		layout1.setStyle("-fx-padding: 5;");
-		layout1.getChildren().addAll(menu, welcomeText, button1);
+		layout1.getChildren().addAll(menu, welcomeText, start1);
 
-		/* Scene 2 Starts */
+		// Game starts here
 
-		VBox layout2 = new VBox(10);
-		scene2 = new Scene(layout2, 800, 640);
+		VBox modern = new VBox(10);
+		gameScene = new Scene(modern, 800, 800);
+		
+		Label checkBoxText = new Label("Random Input");
+		CheckBox random = new CheckBox();
+		random.setDisable(true);
+		HBox checkBoxBox = new HBox(10);
+		checkBoxBox.getChildren().addAll(checkBoxText, random);
 
-		// Texts
 		Label amountText = new Label("Amount");
 		Label drawText = new Label("Draws");
 		Label spotText = new Label("Spots");
 
-		// Random input CheckBox
-		Label checkBoxText = new Label("Random Input");
-		CheckBox randomBox = new CheckBox();
-		randomBox.setDisable(true);
-		HBox checkBoxBox = new HBox(10);
-		checkBoxBox.getChildren().addAll(checkBoxText, randomBox);
 
 		// Menu
 		Menu rulesMenu2 = new Menu("Rules");
@@ -140,29 +136,31 @@ public class JavaFXTemplate extends Application {
 
 		// Sub Menu
 		MenuItem exitConfirm2 = new MenuItem("Confirm Exit");
-		exitConfirm2.setOnAction(e -> window.close());
+		exitConfirm2.setOnAction(e -> main.close());
 		MenuItem rule2 = new MenuItem("Rules");
 		rule2.setOnAction((ActionEvent) -> {
-			text1.setText("The game of Keno is played by picking a set of numbers between 1 and 80. From there, 20 numbers are drawn randomly.\nIf the numbers drawn match the numbers you selected, you win. The amount of numbers you picked and how many of them you got right determine the amount of your payout.\n"
+			rules1.setText("The game of Keno is played by picking a set of numbers between 1 and 80. From there, 20 numbers are drawn randomly.\nIf the numbers drawn match the numbers you selected, you win. The amount of numbers you picked and how many of them you got right determine the amount of your payout.\n"
 					+ "\n"
 					+ "You do not need to match all 20 numbers to get the jackpot. The jackpots are usually awarded for a 9- or 10-number ticket in which all numbers were hit. On average, people usually play between 3-9 numbers.\n"
 					+ "\n"
 					+ "");
-			text1.setX(50);
-			text1.setY(50);
-			currentScene = scene2;
-			window.setScene(scene3);
+			rules1.setX(50);
+			rules1.setY(50);
+			current = gameScene;
+			main.setScene(changed);
 		});
+		
+		
 		MenuItem odd2 = new MenuItem("Odds");
 		odd2.setOnAction((ActionEvent) -> {
-		    text1.setText("10 Spot Game: 1 in 9.05\n"
+		    rules1.setText("10 Spot Game: 1 in 9.05\n"
 		    		+ "8 Spot Game: 1 in 9.77\n"
 		    		+ "4 Spot Game: 1 in 3.86\n"
 		    		+ "1 Spot Game: 1 in 4.00\n");
-			text1.setX(50);
-			text1.setY(50);
-			currentScene = scene2;
-			window.setScene(scene3);
+			rules1.setX(50);
+			rules1.setY(50);
+			current = gameScene;
+			main.setScene(changed);
 		});
 
 		// Two flavors of look are provided
@@ -183,105 +181,72 @@ public class JavaFXTemplate extends Application {
 		rulesMenu2.getItems().addAll(rule2);
 		winOddsMenu2.getItems().addAll(odd2);
 
-		// Back Button
-		Button returnButton = new Button("Back");
 
-		// Clear Button
+		Button returnButton = new Button("Return");
 		Button clearButton = new Button("Clear");
-
-		// Draw Button
 		Button draw = new Button("Draw");
 		draw.setDisable(true);
 		
 		GameplayDriver.init_GameplayDriver(100);
 		// Bet Amount
+		
+		
+		// Set up Number of draws(1,2,3 or 4)
+		RadioButton numDraw1 = new RadioButton("1");
+		RadioButton numDraw2 = new RadioButton("2");
+		RadioButton numDraw3 = new RadioButton("3");
+		RadioButton numDraw4 = new RadioButton("4");
+		ToggleGroup drawGroup = new ToggleGroup();
+		numDraw1.setToggleGroup(drawGroup);
+		numDraw2.setToggleGroup(drawGroup);
+		numDraw3.setToggleGroup(drawGroup);
+		numDraw4.setToggleGroup(drawGroup);
+		drawGroup.selectToggle(numDraw1);
+		numDraw1.setOnAction(e -> GameplayDriver.setRepeat(1));
+		numDraw2.setOnAction(e -> GameplayDriver.setRepeat(2));
+		numDraw3.setOnAction(e -> GameplayDriver.setRepeat(3));
+		numDraw4.setOnAction(e -> GameplayDriver.setRepeat(4));
+		HBox numDrawBox = new HBox(20, numDraw1, numDraw2, numDraw3, numDraw4);
+		
 		RadioButton bet1 = new RadioButton("$1");
 		RadioButton bet2 = new RadioButton("$2");
 		RadioButton bet3 = new RadioButton("$3");
 		RadioButton bet5 = new RadioButton("$5");
 		RadioButton bet10 = new RadioButton("$10");
-
-		// Spot ToggleGroup
 		ToggleGroup betGroup = new ToggleGroup();
-
-		// Assigning Toggle Group
 		bet1.setToggleGroup(betGroup);
 		bet2.setToggleGroup(betGroup);
 		bet3.setToggleGroup(betGroup);
 		bet5.setToggleGroup(betGroup);
 		bet10.setToggleGroup(betGroup);
-
-		// Set Default amount to $1
-		betGroup.selectToggle(bet1);
-
-		// Set No. of Draws
+		betGroup.selectToggle(bet1);  //default $1
 		bet1.setOnAction(e -> GameplayDriver.setBet(1));
 		bet2.setOnAction(e -> GameplayDriver.setBet(2));
 		bet3.setOnAction(e -> GameplayDriver.setBet(3));
 		bet5.setOnAction(e -> GameplayDriver.setBet(5));
 		bet10.setOnAction(e -> GameplayDriver.setBet(10));
+		HBox betBox = new HBox(20, bet1, bet2, bet3, bet5, bet10);
 
-		// No. of Drawings Holder
-		HBox amountBox = new HBox(20, bet1, bet2, bet3, bet5, bet10);
-
-		// No. of Drawings
-		RadioButton numDraw1 = new RadioButton("1");
-		RadioButton numDraw2 = new RadioButton("2");
-		RadioButton numDraw3 = new RadioButton("3");
-		RadioButton numDraw4 = new RadioButton("4");
-
-		// Spot ToggleGroup
-		ToggleGroup drawGroup = new ToggleGroup();
-
-		// Assigning Toggle Group
-		numDraw1.setToggleGroup(drawGroup);
-		numDraw2.setToggleGroup(drawGroup);
-		numDraw3.setToggleGroup(drawGroup);
-		numDraw4.setToggleGroup(drawGroup);
-
-		// Set Default draws to 1
-		drawGroup.selectToggle(numDraw1);
-
-		//Set Number of drawings
-		numDraw1.setOnAction(e -> GameplayDriver.setRepeat(1));
-		numDraw2.setOnAction(e -> GameplayDriver.setRepeat(2));
-		numDraw3.setOnAction(e -> GameplayDriver.setRepeat(3));
-		numDraw4.setOnAction(e -> GameplayDriver.setRepeat(4));
-
-		// No. of Drawings Holder
-		HBox numDrawBox = new HBox(20, numDraw1, numDraw2, numDraw3, numDraw4);
-		
 
 		// Spots
 		RadioButton spot1 = new RadioButton("1");
 		RadioButton spot4 = new RadioButton("4");
 		RadioButton spot8 = new RadioButton("8");
 		RadioButton spot10 = new RadioButton("10");
-
-
-		// Spot ToggleGroup
 		ToggleGroup spotsGroup = new ToggleGroup();
-
-		// Assigning Toggle Group
 		spot1.setToggleGroup(spotsGroup);
 		spot4.setToggleGroup(spotsGroup);
 		spot8.setToggleGroup(spotsGroup);
 		spot10.setToggleGroup(spotsGroup);
-
-		// Spot Holder
 		HBox spotBox = new HBox(20, spot1, spot4, spot8, spot10);
 
 		// Create a Grid Pane to Hold Spots 1-80
-		GridPane gridPane = new GridPane();
-
-		// Nodes are disabled until spots are selected
-		gridPane.setDisable(true);
-
-		// Enable Grid Pane when the spot is selected
+		GridPane grid = new GridPane();
+		grid.setDisable(true);  //disable grid until user chose number of spots(1,4,8,10)
 		spot1.setOnAction((ActionEvent) -> {
 
-			gridPane.setDisable(false);
-			randomBox.setDisable(false);
+			grid.setDisable(false);
+			random.setDisable(false);
 			draw.setDisable(false);
 			GameplayDriver.reset();
 			GameplayDriver.validNumSpots(1);
@@ -295,17 +260,17 @@ public class JavaFXTemplate extends Application {
 		});
 		spot4.setOnAction((ActionEvent) -> {
 
-			gridPane.setDisable(false);
-			randomBox.setDisable(false);
+			grid.setDisable(false);
+			random.setDisable(false);
 			draw.setDisable(false);
 			GameplayDriver.reset();
 			GameplayDriver.validNumSpots(4);
-			gridPane.setDisable(false);
+			grid.setDisable(false);
 		});
 		spot8.setOnAction((ActionEvent) -> {
 
-			gridPane.setDisable(false);
-			randomBox.setDisable(false);
+			grid.setDisable(false);
+			random.setDisable(false);
 			draw.setDisable(false);
 			GameplayDriver.reset();
 			GameplayDriver.validNumSpots(8);
@@ -313,8 +278,8 @@ public class JavaFXTemplate extends Application {
 		});
 		spot10.setOnAction((ActionEvent) -> {
 
-			gridPane.setDisable(false);
-			randomBox.setDisable(false);
+			grid.setDisable(false);
+			random.setDisable(false);
 			draw.setDisable(false);
 			GameplayDriver.reset();
 			GameplayDriver.validNumSpots(10);
@@ -322,33 +287,31 @@ public class JavaFXTemplate extends Application {
 		
 		// Create 80 Buttons Dynamically
 		for (i = 1; i < 81; i++) {
-			ToggleButton btnNumber = new ToggleButton();
-			btnNumber.setText(String.valueOf(i));
-			btnNumber.setMinWidth(40);
+			ToggleButton number = new ToggleButton();
+			number.setText(String.valueOf(i));
+			number.setMinWidth(40);
 			
-			btnNumber.setOnAction((ActionEvent) -> {
-				if (!btnNumber.isSelected()) {
+			number.setOnAction((ActionEvent) -> {
+				if (!number.isSelected()) {
 					GameplayDriver.decSelected();
-					GameplayDriver.removeNumberPlayerSelections(Integer.parseInt(btnNumber.getText()));
-					btnNumber.setSelected(false);
+					GameplayDriver.removeNumberPlayerSelections(Integer.parseInt(number.getText()));
+					number.setSelected(false);
 				}
 				
 				else {
 					if (GameplayDriver.incSelected()) {
-						GameplayDriver.addNumberToPlayerSelections(Integer.parseInt(btnNumber.getText()));
-						btnNumber.setSelected(true);
+						GameplayDriver.addNumberToPlayerSelections(Integer.parseInt(number.getText()));
+						number.setSelected(true);
 					}
 					else {
-						btnNumber.setSelected(false);
+						number.setSelected(false);
 					}
 				}
 			});
 			
 
-			// Adding buttons to a list for later operations.
-			tglist.add(btnNumber);
-			// Adding buttons to the gridPane
-			gridPane.add(btnNumber, j, k, 1, 1);
+			list.add(number);
+			grid.add(number, j, k, 1, 1);
 
 			j++;
 			if (i % 8 == 0) {
@@ -358,49 +321,41 @@ public class JavaFXTemplate extends Application {
 
 		}
 
-		// Draw Output Label
-		Label drawNotice = new Label("Draw Result:");
-		Label drawOutput = new Label("NILL");
-		Label amountWonNotice = new Label("Amount Won:");
-		Label amountWonOutput = new Label("NILL");
-
 		// Labels for Result History Tab
-		Label selectedChoiceText = new Label("Choices Provided:");
-		Label selectedChoice = new Label("NILL");
-		Label selectedBetText = new Label("Bet");
-		Label selectedBet = new Label("NILL");
+		Label choices = new Label("Numbers Chosen:");
+		Label outputNumbers = new Label("");
+		Label betText = new Label("Bet");
+		Label bet = new Label("");
 		Label totalBetText = new Label("Total Bet");
-		Label totalBet = new Label("NILL");
+		Label totalBet = new Label("");
 
-		Label itemsMatchedText = new Label("Matched Items");
-		Label wonText = new Label("Won");
+		Label numbersMatched = new Label("Matched Numbers");
+		Label oneMatch = new Label("NULL");
+		Label twoMatches = new Label("NULL");
+		Label threeMatches = new Label("NULL");
+		Label fourMatches = new Label("NULL");
+
 		Label drawNoText = new Label("Draw");
 		Label draw1 = new Label("1");
 		Label draw2 = new Label("2");
 		Label draw3 = new Label("3");
 		Label draw4 = new Label("4");
+		// Draw Output Label
+		Label drawResult = new Label("Draw Result:");
+		Label result = new Label("");
+		Label amountWon = new Label("Amount Won:");
+		Label total = new Label("");
 
-		Label oneMatch = new Label("NILL");
-		Label oneWon = new Label("NILL");
 
-		Label twoMatches = new Label("NILL");
-		Label twoWon = new Label("NILL");
 
-		Label threeMatches = new Label("NILL");
-		Label threeWon = new Label("NILL");
-
-		Label fourMatches = new Label("NILL");
-		Label fourWon = new Label("NILL");
 		
 		Label printOutput = new Label("Press Draw to Start");
-		printOutput.setStyle("-fx-padding: 80; -fx-font: 24px \"Serif\";");
+		printOutput.setStyle("-fx-padding: 80; -fx-font: 20px \"Serif\";");
 
 
-		// Show Results in a single horizontal tab
 		HBox drawBox = new HBox(10);
-		drawBox.getChildren().addAll(drawNotice, drawOutput, amountWonNotice, amountWonOutput);
-
-		// Let the draw Begin
+		drawBox.getChildren().addAll(drawResult, result);  //Hbox that shows Draw Result
+		
 		Boolean buttonClicked = false;
 		
 		draw.setOnAction((ActionEvent) -> {
@@ -411,30 +366,26 @@ public class JavaFXTemplate extends Application {
 			if (GameplayDriver.readyToPlay()) {
 				
 
-				// Extracting button's text
-				GameplayDriver.setRepeat(1);
+				// Extracting numbers's text
 				RadioButton selectedDraws = (RadioButton) drawGroup.getSelectedToggle();
 				String draws = selectedDraws.getText();
 
-				// Update Labels
-				// Selected Choices by user or random
-				selectedChoice.setText(GameplayDriver.extractSelectionsString() );
-				
-				selectedBet.setText("$" + GameplayDriver.getBet());
-				
-				totalBet.setText("$" + GameplayDriver.getBet() * Integer.parseInt(draws));
 
-				printOutput.setText("Drawing!");
+				outputNumbers.setText(GameplayDriver.extractSelectionsString() );				
+				bet.setText("$" + GameplayDriver.getBet());
+				totalBet.setText("$" + GameplayDriver.getBet() * Integer.parseInt(draws));
+				printOutput.setText("Waiting for Results...");
+				
 				GameplayDriver.findWinners();
 				// Disable unnecessary tabs
-				amountBox.setDisable(true);
+				betBox.setDisable(true);
 				spotBox.setDisable(true);
 				numDrawBox.setDisable(true);
-				gridPane.setDisable(true);
+				grid.setDisable(true);
 				draw.setDisable(true);
 				returnButton.setDisable(true);
 				clearButton.setDisable(true);
-				randomBox.setDisable(true);
+				random.setDisable(true);
 
 				/*
 				 * Adding Pause between Draws Threaded Execution, allows other functions to
@@ -461,27 +412,23 @@ public class JavaFXTemplate extends Application {
 					@Override
 					public void handle(ActionEvent event) {
 						
-						drawOutput.setText(GameplayDriver.extractDrawingsString());
+						result.setText(GameplayDriver.extractDrawingsString());
 						
 						GameplayDriver.findWinners();
 						String temp = " " + GameplayDriver.calculateWinnings(GameplayDriver.getBet());
-						amountWonOutput.setText("$" + temp);
+						total.setText("$" + temp);
 
-						// Looping until all draws are complete
+						// Looping until all draws are complete(4,3,2,1)
 						m++;
-						//int x = GameplayDriver.getRepeat();
-						
-						
+												
 						if (m==1) {
 
-							printOutput.setText("Continue to Next Draw");
-							System.out.println("Continue to next draw");
+							printOutput.setText("Next Draw");
+							//System.out.println("Continue to next draw");
 							if (Integer.parseInt(draws) == GameplayDriver.getRepeat()) {
-								printOutput.setText("Game Over");
+								printOutput.setText("The End");
 								draw.setDisable(true);
-								// User can go back after game overs
 								returnButton.setDisable(false);
-								// User can Clear after game overs
 								clearButton.setDisable(false);
 							} else {
 								draw.setDisable(false);
@@ -489,28 +436,27 @@ public class JavaFXTemplate extends Application {
 						}
 
 							// Show results
-							amountWonOutput.setText("$" + GameplayDriver.getWinnings());
+							total.setText("$" + GameplayDriver.getWinnings());
 							
 
 						if (GameplayDriver.getRepeat() == 1) {
-							System.out.println("draw1");
+							//System.out.println("draw1");
 							oneMatch.setText(GameplayDriver.getMatches());
-							oneWon.setText("$" + temp);
+
 						} else if (GameplayDriver.getRepeat() == 2) {
-							System.out.println("draw2");
+							//System.out.println("draw2");
 							twoMatches.setText(GameplayDriver.getMatches());
-							twoWon.setText("$" + temp);
 						} else if (GameplayDriver.getRepeat() == 3) {
-							System.out.println("draw3");
+							
+							//System.out.println("draw3");
 							threeMatches.setText(GameplayDriver.getMatches());
-							threeWon.setText("$" + temp);
 						} else if (GameplayDriver.getRepeat() == 4) {
-							System.out.println("draw4");
+							
+							//System.out.println("draw4");
 							fourMatches.setText(GameplayDriver.getMatches());
-							fourWon.setText("$" + temp);
 						} else {
 							
-							throw new RuntimeException("Illegal Draw");
+							throw new RuntimeException("Draw > 4 or < 1");
 						}
 						
 						
@@ -523,161 +469,156 @@ public class JavaFXTemplate extends Application {
 
 				// Reset positions
 				m = 0;
-				GameplayDriver.resetDraw();
+				GameplayDriver.reset();
 
-				// 20 Draws
-				timeline.setCycleCount(GameplayDriver.getRepeat());
+				timeline.setCycleCount(GameplayDriver.getRepeat());  //Loop till draws=1(default)
 				timeline.play();
 
-			} else {
-				// do Warn User
-				printOutput.setText("Check Your Spots");
+			} else { //If we get here then user didn`t chose appropriate # of spots
+				// More spots to chose
+				String remains=GameplayDriver.remainingPicks();
+				printOutput.setText(remains);
 			}
 			}
 		});
 		
 	
 
-		// Back Button Returns to Main Menu and Resets the Game
-		returnButton.setOnAction((ActionEvent) -> {
-			i = 0;
-			j = 0;
-			k = 0;
-			spotBox.setDisable(false);
-			amountBox.setDisable(false);
-			numDrawBox.setDisable(false);
-			betGroup.selectToggle(bet1);
-			drawGroup.selectToggle(numDraw1);
-			spotsGroup.selectToggle(null);
-			draw.setDisable(true);
-			drawOutput.setText("NILL");
-			selectedChoice.setText("NILL");
-			amountWonOutput.setText("NILL");
-
-			oneMatch.setText("NILL");
-			twoMatches.setText("NILL");
-			threeMatches.setText("NILL");
-			fourMatches.setText("NILL");
-			totalBet.setText("NILL");
-			selectedBet.setText("NILL");
-			oneWon.setText("NILL");
-			twoWon.setText("NILL");
-			threeWon.setText("NILL");
-			fourWon.setText("NILL");
-
-			// Enabling gridPane to fire
-			gridPane.setDisable(false);
-			// Reset all nodes
-			for (i = 1; i <= 80; i++) {
-				ToggleButton btn = new ToggleButton();
-				btn = tglist.get(i - 1);
-				if (btn.isSelected())
-					btn.fire();
-			}
-			gridPane.setDisable(true);
-
-			// Enabling checkBox to fire
-			randomBox.setDisable(false);
-			if (randomBox.isSelected())
-				randomBox.fire();
-			randomBox.setDisable(true);
-
-			GameplayDriver.reset();
-
-			// Go to Main Menu
-			window.setScene(scene1);
-		});
+		
 
 		clearButton.setOnAction((ActionEvent) -> {
-
+			i = 0;j = 0;k = 0;
 			spot1.setDisable(false);
 			spot4.setDisable(false);
 			spot8.setDisable(false);
 			spot10.setDisable(false);
-			i = 0;
-			j = 0;
-			k = 0;
-			spotBox.setDisable(false);
-			amountBox.setDisable(false);
-			numDrawBox.setDisable(false);
+			
+			oneMatch.setText("NULL");
+			twoMatches.setText("NULL");
+			threeMatches.setText("NULL");
+			fourMatches.setText("NULL");
+			totalBet.setText("");
+			bet.setText("");
+			
 			betGroup.selectToggle(bet1);
 			drawGroup.selectToggle(numDraw1);
 			spotsGroup.selectToggle(null);
-			draw.setDisable(true);
-			randomBox.setDisable(true);
-			drawOutput.setText("NILL");
-			selectedChoice.setText("NILL");
-			amountWonOutput.setText("NILL");
 
-			oneMatch.setText("NILL");
-			twoMatches.setText("NILL");
-			threeMatches.setText("NILL");
-			fourMatches.setText("NILL");
-			totalBet.setText("NILL");
-			selectedBet.setText("NILL");
-			oneWon.setText("NILL");
-			twoWon.setText("NILL");
-			threeWon.setText("NILL");
-			fourWon.setText("NILL");
+			spotBox.setDisable(false);
+			betBox.setDisable(false);
+			numDrawBox.setDisable(false);
+			
+			draw.setDisable(true);
+			random.setDisable(true);
+			result.setText("");
+			outputNumbers.setText("");
+			total.setText("");
+
 
 			// Enabling gridPane to fire
-			gridPane.setDisable(false);
+			grid.setDisable(false);
 			// Reset all nodes
 			for (i = 1; i <= 80; i++) {
 				ToggleButton btn = new ToggleButton();
-				btn = tglist.get(i - 1);
+				btn = list.get(i - 1);
 				if (btn.isSelected())
 					btn.fire();
 			}
-			gridPane.setDisable(true);
+			grid.setDisable(true);
 
-			randomBox.setDisable(false);
-			if (randomBox.isSelected())
-				randomBox.fire();
-			randomBox.setDisable(true);
+			random.setDisable(false);
+			if (random.isSelected())
+				random.fire();
+			random.setDisable(true);
 
 			GameplayDriver.reset();
 		});
 
 		// On setting checkBox, manual input is restricted
-		randomBox.setOnAction((ActionEvent) -> {
+		random.setOnAction((ActionEvent) -> {
 
-			if (randomBox.isSelected() == true) {
+			if (random.isSelected() == true) {
 				RadioButton sRB = (RadioButton) spotsGroup.getSelectedToggle();
 				String str = sRB.getText();
 				GameplayDriver.autoPicks(Integer.parseInt(str));
 
 				// Prevent manual input
-				gridPane.setDisable(false);
+				grid.setDisable(false);
 				// Reset all nodes
 				for (i = 1; i <= 80; i++) {
 					ToggleButton btn = new ToggleButton();
-					btn = tglist.get(i - 1);
+					btn = list.get(i - 1);
 					if (btn.isSelected())
 						btn.fire();
 				}
-				gridPane.setDisable(true);
+				grid.setDisable(true);
 
 				spotBox.setDisable(true);
 
 			} else {
-				gridPane.setDisable(false);
+				grid.setDisable(false);
 				spotBox.setDisable(false);
 			}
 
 		});
+		
+		// Back Button Returns to Main Menu and Resets the Game
+				returnButton.setOnAction((ActionEvent) -> {
+					i = 0; j=0 ; k=0;
 
-		/*
-		 * Setting User Interface Arranging tabs
-		 */
+					oneMatch.setText("NULL");
+					twoMatches.setText("NULL");
+					threeMatches.setText("NULL");
+					fourMatches.setText("NULL");
+					totalBet.setText("");
+					bet.setText("");
+					
+					draw.setDisable(true);
+					result.setText("");
+					outputNumbers.setText("");
+					total.setText("");
+					
+					spotBox.setDisable(false);
+					betBox.setDisable(false);
+					numDrawBox.setDisable(false);
+					betGroup.selectToggle(bet1);
+					drawGroup.selectToggle(numDraw1);
+					spotsGroup.selectToggle(null);
+
+
+
+					// Enabling gridPane to fire
+					grid.setDisable(false);
+					// Reset all nodes
+					for (i = 1; i <= 80; i++) {
+						ToggleButton btn = new ToggleButton();
+						btn = list.get(i - 1);
+						if (btn.isSelected())
+							btn.fire();
+					}
+					grid.setDisable(true);
+
+					// Enabling checkBox to fire
+					random.setDisable(false);
+					if (random.isSelected())
+						random.fire();
+					random.setDisable(true);
+
+					GameplayDriver.reset();
+
+					// Go to Main Menu
+					main.setScene(startScene);
+				});
+
+
 		VBox vbox1 = new VBox(10);
-		VBox vbox21 = new VBox(10);
 		VBox vbox2 = new VBox(10);
+		VBox vbox3 = new VBox(10);
 		HBox drawAndClear = new HBox(20);
 
 		drawAndClear.getChildren().addAll(draw, clearButton);
 
-		vbox1.getChildren().addAll(returnButton, amountText, amountBox, drawText, numDrawBox, spotText, spotBox, gridPane,
+		vbox1.getChildren().addAll(returnButton, amountText, betBox, drawText, numDrawBox, spotText, spotBox, grid,
 				checkBoxBox, drawAndClear);
 
 		// Displays history Tab (Right Window below Selected Choice)
@@ -686,44 +627,38 @@ public class JavaFXTemplate extends Application {
 		tab.setVgap(10);
 
 		tab.add(drawNoText, 0, 0, 1, 1);
-		tab.add(itemsMatchedText, 2, 0, 1, 1);
-		tab.add(wonText, 3, 0, 1, 1);
+		tab.add(numbersMatched, 2, 0, 1, 1);
+		tab.add(amountWon, 3, 0, 1, 1);
+		tab.add(total, 4, 0, 1, 1);
 
 		tab.add(draw1, 0, 1, 1, 1);
-		tab.add(oneMatch, 2, 1, 1, 1);
-		tab.add(oneWon, 3, 1, 1, 1);
-
 		tab.add(draw2, 0, 2, 1, 1);
-		tab.add(twoMatches, 2, 2, 1, 1);
-		tab.add(twoWon, 3, 2, 1, 1);
-
 		tab.add(draw3, 0, 3, 1, 1);
-		tab.add(threeMatches, 2, 3, 1, 1);
-		tab.add(threeWon, 3, 3, 1, 1);
-
 		tab.add(draw4, 0, 4, 1, 1);
+		
+		tab.add(oneMatch, 2, 1, 1, 1);
+		tab.add(twoMatches, 2, 2, 1, 1);
+		tab.add(threeMatches, 2, 3, 1, 1);
 		tab.add(fourMatches, 2, 4, 1, 1);
-		tab.add(fourWon, 3, 4, 1, 1);
+
 
 		HBox betTab = new HBox(20);
-		betTab.getChildren().addAll(selectedBetText, selectedBet, totalBetText, totalBet);
+		betTab.getChildren().addAll(betText, bet, totalBetText, totalBet);
 
-		vbox21.getChildren().addAll(selectedChoiceText, selectedChoice, betTab, tab, printOutput);
+		vbox2.getChildren().addAll(choices, outputNumbers, betTab, tab, printOutput);
 
-		vbox2.getChildren().addAll(drawBox, vbox21);
+		vbox3.getChildren().addAll(drawBox, vbox2);
 
 		HBox hbox12 = new HBox(30);
-		hbox12.getChildren().addAll(vbox1, vbox2);
+		hbox12.getChildren().addAll(vbox1, vbox3);
 
-		layout2.getChildren().addAll(menu2, hbox12);
-		layout2.setStyle("-fx-padding: 5;");
+		modern.getChildren().addAll(menu2, hbox12);
+		modern.setStyle("-fx-padding: 5;");
 
-		/*
-		 * New Look (Modern) Adding CSS
-		 */
-		modernLook.setOnAction((ActionEvent) -> {
-
-			layout2.setStyle("-fx-padding: 5; -fx-background-color: #a52a2a;");
+	    
+		modernLook.setOnAction((ActionEvent) -> {  //Modern look using CSS format
+			
+			modern.setStyle("-fx-padding: 5; -fx-background-color: #a52a2a;");
 			menuBar2.setStyle("-fx-background-color: #f0f8ff; -fx-font: 14px \"Serif\";");
 			draw.setStyle("-fx-background-color: NAVY; -fx-text-fill: white;" + " -fx-font: 14px \"Serif\";");
 			clearButton.setStyle("-fx-background-color: Black; -fx-text-fill: white;" + " -fx-font: 18px \"Serif\";");
@@ -732,14 +667,14 @@ public class JavaFXTemplate extends Application {
 			amountText.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
 			drawText.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
 			spotText.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
-			vbox2.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
+			vbox3.setStyle("-fx-font: 14px \"Serif\"; -fx-font-style: italic;");
 			tab.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;" + "-fx-border-width: 2;"
 					+ "-fx-border-insets: 5;" + "-fx-border-radius: 5;" + "-fx-border-color: White;");
 
 
 			for (i = 1; i <= 80; i++) {
 				ToggleButton btn = new ToggleButton();
-				btn = tglist.get(i - 1);
+				btn = list.get(i - 1);
 				btn.setStyle("-fx-text-fill: Black; -fx-font: 14 \"Serif\"; -fx-border-color: White;");
 			}
 
@@ -748,7 +683,7 @@ public class JavaFXTemplate extends Application {
 		// Default look resets all CSS set by the Modern Look
 		defaultLook.setOnAction((ActionEvent) -> {
 
-			layout2.setStyle("-fx-padding: 5;");
+			modern.setStyle("-fx-padding: 5;");
 			menuBar2.setStyle(null);
 			draw.setStyle(null);
 			clearButton.setStyle(null);
@@ -757,37 +692,42 @@ public class JavaFXTemplate extends Application {
 			amountText.setStyle(null);
 			drawText.setStyle(null);
 			spotText.setStyle(null);
-			vbox2.setStyle(null);
+			vbox3.setStyle(null);
 			tab.setStyle(null);
 
 
 			for (i = 1; i <= 80; i++) {
 				ToggleButton btn = new ToggleButton();
-				btn = tglist.get(i - 1);
+				btn = list.get(i - 1);
 				btn.setStyle(null);
 			}
 		});
 
 		/* Scene 3 Starts */
 		VBox layout3 = new VBox(10);
-		scene3 = new Scene(layout3, 800, 640);
+		changed = new Scene(layout3, 800, 800);
 
 		// Back Button Scene 3
 		Button rulesreturnButton = new Button("Return");
-		rulesreturnButton.setOnAction(e -> window.setScene(currentScene));
+		rulesreturnButton.setOnAction(e -> main.setScene(current));
 
 		ScrollPane scrollArea1 = new ScrollPane();
 
-		text1.wrappingWidthProperty().bind(scene3.widthProperty());
+		rules1.wrappingWidthProperty().bind(changed.widthProperty());
 		scrollArea1.setFitToWidth(true);
-		scrollArea1.setContent(text1);
+		scrollArea1.setContent(rules1);
 
 		layout3.getChildren().addAll(rulesreturnButton, scrollArea1);
 		layout3.setStyle("-fx-padding: 5;");
 
-		window.setScene(scene1);
-		window.setTitle("KENO");
-		window.show();
+		main.setScene(startScene);
+		main.setTitle("KENO");
+		main.show();
+	}
+
+	private int pattern(String string) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	private String valueOf(int l) {
